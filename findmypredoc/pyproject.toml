@@ -1,0 +1,29 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "findmypredoc"
+version = "0.1.0"
+description = "Scrape and structure pre-doctoral research-assistant job listings"
+requires-python = ">=3.12"
+dependencies = [
+    "anthropic",
+    "beautifulsoup4",
+    "requests",
+    "playwright",
+    "python-dotenv",
+    "tqdm",
+    "pypdf",
+    "python-docx",
+    "truststore",
+]
+
+[project.optional-dependencies]
+dev = ["ipykernel"]
+
+[tool.setuptools.packages.find]
+include = ["pipeline*", "sources*"]
+
+[tool.setuptools.package-data]
+"pipeline.extract" = ["schema.json"]

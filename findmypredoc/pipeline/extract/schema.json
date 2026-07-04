@@ -1,0 +1,51 @@
+{
+    "position": {
+        "institution": {
+            "nullable": false,
+            "type": "string",
+            "description": "The full name of the institution or organization offering the position"
+        },
+        "title": {
+            "nullable": true,
+            "type": "string",
+            "description": "The title of the offered position"
+        },
+        "location": {
+            "nullable": true,
+            "type": "string",
+            "description": "The location of the position. Use the full city name, full state/province name (not abbreviations like 'MA' or 'CA'), and full country name, e.g., 'Cambridge, Massachusetts, United States'. If only a country is known, use just the country. Use 'Remote' if the position is explicitly remote."
+        },
+        "starts": {
+            "nullable": true,
+            "type": "string",
+            "description": "The date when the position starts. Prefer an exact date in YYYY-MM-DD format if one is stated. If only a month and year are known, use 'Month YYYY' (e.g. 'July 2026'). If only a season and year are known, use 'Season YYYY' (e.g. 'Summer 2026')."
+        },
+        "length": {
+            "nullable": true,
+            "type": "string",
+            "description": "The approximate length of the position measured in months or years, e.g., '6 months', '1 year', '2 years'"
+        }
+    },
+    "application": {
+        "opens": {
+            "nullable": true,
+            "type": "string",
+            "description": "The date when applications open. Prefer an exact date in YYYY-MM-DD format if one is stated. If only a month and year are known, use 'Month YYYY' (e.g. 'October 2025'). If only a season and year are known, use 'Season YYYY' (e.g. 'Fall 2025')."
+        },
+        "closes": {
+            "nullable": true,
+            "type": "string",
+            "description": "The date when applications close. Prefer an exact date in YYYY-MM-DD format if one is stated. If only a month and year are known, use 'Month YYYY' (e.g. 'March 2026'). If only a season and year are known, use 'Season YYYY' (e.g. 'Spring 2026')."
+        },
+        "letters_of_recommendation": {
+            "nullable": true,
+            "type": "integer",
+            "description": "The minimum number of letters of recommendation required for the application"
+        },
+        "writing_sample": {
+            "nullable": true,
+            "type": "boolean",
+            "description": "Indicates whether a writing sample is required for the application"
+        }
+    }
+}
