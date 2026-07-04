@@ -35,3 +35,6 @@ experiments/results.json
 Thumbs.db
 .vscode/
 .idea/
+
+.vercel
+.env*

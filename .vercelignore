@@ -1,0 +1,11 @@
+.venv.dev
+.venv.prod
+.git
+.agents
+.claude
+.env
+.env.local
+experiments
+findmypredoc/findmypredoc.egg-info
+__pycache__
+node_modules
