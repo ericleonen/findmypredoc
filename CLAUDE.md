@@ -8,7 +8,9 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 aggregator sources (NBER, Econ Job Market, PREDOC.org), reads each posting (web page, PDF,
 DOCX, or Google Drive file), and uses the Anthropic API to extract structured fields into a
 schema. A daily job (`service/`) upserts the results into a Neon Postgres database, which a
-read-only API (`api/`) serves to a not-yet-built frontend (`app/`).
+read-only API (`api/`) serves to a Next.js frontend (`app/`). `api/` and `app/` deploy
+together as a single Vercel project via [Services](https://vercel.com/docs/services) — see
+the repo-root `vercel.json`.
 
 The repo is organized as several independent top-level components:
 
@@ -20,8 +22,9 @@ The repo is organized as several independent top-level components:
 - **`service/`** — the daily job that runs `findmypredoc`'s pipeline and upserts results into
   the Neon `predoc`/`source` tables, skipping any URL already in the database (success or
   failure) to avoid re-spending LLM tokens. Run manually today; not yet wired to a scheduler.
-- **`api/`** — a read-only FastAPI service querying the same Neon tables. Implemented.
-- **`app/`** — placeholder for a React frontend. Not yet implemented.
+- **`api/`** — a read-only FastAPI service querying the same Neon tables, mounted entirely
+  under `/api/*`. Implemented.
+- **`app/`** — the Next.js frontend: a filterable table of postings. Implemented (first draft).
 
 Each of `experiments/`, `service/`, `api/`, and `app/` has its own `README.md` with more detail.
 
@@ -42,6 +45,10 @@ findmypredoc/.venv.dev/Scripts/python.exe -m pip install -e ".[dev]"
 
 # Run the API (api/, see below)
 .venv.dev/Scripts/python.exe -m uvicorn app.server:app --reload --app-dir api
+
+# Run api/ + app/ together the way they run in production (Vercel Services) --
+# requires the Vercel CLI (npx vercel) and the project linked (npx vercel link)
+vercel dev
 ```
 
 The `findmypredoc` package is installed **editable**, so `import pipeline` / `import
@@ -146,9 +153,29 @@ secrets).
 
 ## `api/` — read-only query API
 
-A FastAPI app (`api/app/`) over the same Neon tables `service/` populates. See
-`api/README.md` for the full endpoint/filter reference. Notable design point: `pos_starts` /
-`app_opens` / `app_closes` are free-text dates from the extraction schema (exact day, month,
-or season) — `api/app/dates.py` parses each into an `(earliest, latest)` range at query time
-so they can be ordered and range-filtered consistently regardless of precision, without
-needing schema changes to the `predoc` table.
+A FastAPI app (`api/app/`) over the same Neon tables `service/` populates, mounted entirely
+under `/api/*` (see `api/app/server.py` — this matches how the Vercel Services rewrite
+forwards paths, with the `/api` prefix intact). See `api/README.md` for the full
+endpoint/filter reference. Notable design point: `pos_starts` / `app_opens` / `app_closes`
+are free-text dates from the extraction schema (exact day, month, or season) —
+`api/app/dates.py` parses each into an `(earliest, latest)` range at query time so they can
+be ordered and range-filtered consistently regardless of precision, without needing schema
+changes to the `predoc` table.
+
+## `app/` — frontend
+
+A Next.js (App Router) app: a single filterable/sortable table of postings, plus an About
+page. See `app/README.md`. Talks to `api/` via a Vercel service binding (`API_URL`) rather
+than a public URL — see the repo-root `vercel.json`. Filter/sort state lives entirely in the
+URL's search params; the main page (`app/src/app/page.tsx`) is a Server Component that reads
+them and re-fetches on the server, so there's no client-side fetch/loading-state code to
+maintain.
+
+## Deployment (Vercel Services)
+
+`api/` and `app/` deploy together as one Vercel project (`findmypredoc`) via the repo-root
+`vercel.json`'s `services` config — see [Services](https://vercel.com/docs/services). The
+project's Root Directory setting must be the repo root (not a subdirectory) for this to
+work, since the config references both `app/` and `api/` as sibling service roots. Public
+routing: `/api/*` → the `api` service, everything else → the `app` service (top-level
+`rewrites`). `findmypredoc/`, `experiments/`, and `service/` aren't part of this deployment.

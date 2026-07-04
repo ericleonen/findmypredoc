@@ -1,8 +1,14 @@
 # api
 
 Read-only FastAPI service that queries the Neon `predoc`/`source` tables populated by
-`service/` + `findmypredoc/`. Sits between the database and `app/`, and is also usable
-directly as an alternative query interface.
+`service/` + `findmypredoc/`. Deployed together with `app/` as a single Vercel project via
+[Services](https://vercel.com/docs/services) (see the repo-root `vercel.json`) — the `app/`
+frontend reaches it over an internal service binding, and it's also usable directly as an
+alternative query interface at `/api/*`.
+
+All routes are mounted under `/api` (rather than the repo root) because the Services
+rewrite (`/api/(.*)` → this service) forwards the matched path with the `/api` prefix
+intact — see `app/server.py`.
 
 ## Running
 
@@ -18,11 +24,12 @@ Reads `DATABASE_URL` from `service/.env.local` (the same Neon connection string
 
 ## Endpoints
 
-- `GET /predocs` — list postings (`error IS NULL` only, i.e. successfully-extracted). Filters and sorting below.
-- `GET /predocs/{id}` — a single posting.
-- `GET /sources` — the aggregator sources, with a count of successfully-extracted postings each.
+- `GET /api/predocs` — list postings (`error IS NULL` only, i.e. successfully-extracted). Filters and sorting below.
+- `GET /api/predocs/{id}` — a single posting.
+- `GET /api/sources` — the aggregator sources, with a count of successfully-extracted postings each.
+- `GET /api/docs` / `GET /api/redoc` — interactive API docs (Swagger UI / ReDoc).
 
-### `GET /predocs` filters
+### `GET /api/predocs` filters
 
 **First-class: application window + position start.** `pos_starts` / `app_opens` /
 `app_closes` are free-text dates from the extraction schema (an exact day, a month, or a
