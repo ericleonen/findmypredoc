@@ -1,6 +1,6 @@
 import { Suspense } from "react";
 import FilterBar from "@/components/FilterBar";
-import PredocTable from "@/components/PredocTable";
+import PredocCards from "@/components/PredocCards";
 import Pagination from "@/components/Pagination";
 import { fetchPredocs, type ApplicationStatus } from "@/lib/api";
 
@@ -65,7 +65,7 @@ export default async function HomePage({ searchParams }: { searchParams: SearchP
       <Suspense>
         <FilterBar />
       </Suspense>
-      <PredocTable items={predocs.items} />
+      <PredocCards items={predocs.items} />
       <Suspense>
         <Pagination total={predocs.total} limit={predocs.limit} offset={predocs.offset} />
       </Suspense>

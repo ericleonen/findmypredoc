@@ -1,13 +1,14 @@
 "use client";
 
 import { useRouter, usePathname, useSearchParams } from "next/navigation";
-import { Search, CircleDot, Clock, CircleOff, ArrowUpDown, SlidersHorizontal, X } from "lucide-react";
+import { Search, CircleDot, Clock, CircleSlash, CircleOff, ArrowUpDown, SlidersHorizontal, X } from "lucide-react";
 import { useCallback, useState, useTransition, type ComponentType, type FormEvent } from "react";
 import type { ApplicationStatus } from "@/lib/api";
 
 const STATUS_OPTIONS: { value: ApplicationStatus; label: string; icon: ComponentType<{ size?: number; strokeWidth?: number }> }[] = [
   { value: "open", label: "Open", icon: CircleDot },
   { value: "upcoming", label: "Upcoming", icon: Clock },
+  { value: "likely_closed", label: "Likely closed", icon: CircleSlash },
   { value: "closed", label: "Closed", icon: CircleOff },
 ];
 

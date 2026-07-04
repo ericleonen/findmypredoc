@@ -62,19 +62,45 @@ def parse_fuzzy_date(value: Optional[str]) -> Optional[DateRange]:
     return None
 
 
+# When an application opens date is known but a closes date isn't, we assume a one-month
+# application window rather than treating the posting as open indefinitely.
+_ASSUMED_APPLICATION_WINDOW_MONTHS = 1
+
+
+def _add_months(d: date, months: int) -> date:
+    month_index = d.month - 1 + months
+    year = d.year + month_index // 12
+    month = month_index % 12 + 1
+    day = min(d.day, calendar.monthrange(year, month)[1])
+    return date(year, month, day)
+
+
 def application_status(
-    opens: Optional[DateRange], closes: Optional[DateRange], today: Optional[date] = None
+    starts: Optional[DateRange],
+    opens: Optional[DateRange],
+    closes: Optional[DateRange],
+    today: Optional[date] = None,
 ) -> str:
     """
-    "open"     -- applications can be submitted today (or no window is known to be closed)
-    "upcoming" -- the application window hasn't opened yet
-    "closed"   -- the application window has passed
-    "unknown"  -- neither an opens nor a closes date could be determined
+    "open"          -- applications can be submitted today (or no window is known to be closed)
+    "upcoming"      -- the application window hasn't opened yet
+    "likely_closed" -- no closes date is known, but it's been more than the assumed one-month
+                       application window since the posting opened
+    "closed"        -- the position's start date has passed (regardless of the application
+                       window), or the application window itself has passed
+    "unknown"       -- neither an opens nor a closes date could be determined
     """
     today = today or date.today()
 
-    if closes is not None and closes.latest < today:
+    if starts is not None and starts.latest < today:
         return "closed"
+    if closes is not None:
+        if closes.latest < today:
+            return "closed"
+    elif opens is not None:
+        assumed_closes = _add_months(opens.latest, _ASSUMED_APPLICATION_WINDOW_MONTHS)
+        if assumed_closes < today:
+            return "likely_closed"
     if opens is not None and opens.earliest > today:
         return "upcoming"
     if opens is None and closes is None:

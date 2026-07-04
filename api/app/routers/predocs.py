@@ -9,7 +9,7 @@ from ..schemas import Predoc, PredocList
 
 router = APIRouter(prefix="/predocs", tags=["predocs"])
 
-_VALID_APPLICATION_STATUSES = {"open", "upcoming", "closed", "unknown"}
+_VALID_APPLICATION_STATUSES = {"open", "upcoming", "likely_closed", "closed", "unknown"}
 _SORTABLE_FIELDS = {
     "recommended": None,  # handled specially -- see _recommended_sort_key
     "starts": "starts_earliest",
@@ -17,7 +17,21 @@ _SORTABLE_FIELDS = {
     "closes": "closes_earliest",
     "institution": "institution",
 }
-_STATUS_PRIORITY = {"open": 0, "upcoming": 1, "unknown": 2, "closed": 3}
+_STATUS_PRIORITY = {"open": 0, "upcoming": 1, "unknown": 2, "likely_closed": 3, "closed": 4}
+
+# Rows are considered duplicates -- e.g. the same posting mirrored at a different URL, or
+# picked up by more than one aggregator source -- when every one of these fields matches.
+_DEDUPE_KEY_FIELDS = (
+    "institution",
+    "title",
+    "location",
+    "length",
+    "letters_of_recommendation",
+    "writing_sample",
+    "starts",
+    "opens",
+    "closes",
+)
 
 
 def _select_query() -> str:
@@ -95,8 +109,33 @@ def _enrich(row: dict) -> dict:
     row["opens_latest"] = opens.latest if opens else None
     row["closes_earliest"] = closes.earliest if closes else None
     row["closes_latest"] = closes.latest if closes else None
-    row["application_status"] = application_status(opens, closes)
+    row["application_status"] = application_status(starts, opens, closes)
     return row
+
+
+def _dedupe_rows(rows: list[dict]) -> list[dict]:
+    """
+    Merges rows that are identical except for their url/source -- the same posting is
+    sometimes mirrored at a different link, or picked up by more than one aggregator source.
+    The first-seen row's id/url become the merged row's primary id/url; every url that
+    pointed to it (including that first one) is kept in "links".
+    """
+    merged_by_key: dict[tuple, dict] = {}
+    order: list[tuple] = []
+
+    for row in rows:
+        key = tuple(row[field] for field in _DEDUPE_KEY_FIELDS)
+        link = {"url": row["url"], "source_name": row["source_name"]}
+
+        if key not in merged_by_key:
+            merged = dict(row)
+            merged["links"] = [link]
+            merged_by_key[key] = merged
+            order.append(key)
+        else:
+            merged_by_key[key]["links"].append(link)
+
+    return [merged_by_key[key] for key in order]
 
 
 def _date_range_overlaps(row: dict, prefix: str, after: Optional[date], before: Optional[date]) -> bool:
@@ -154,7 +193,8 @@ def list_predocs(
         default=[],
         alias="application_status",
         description="Filter to postings whose application window is one of these statuses: "
-        "open, upcoming, closed, unknown. Repeatable, e.g. ?application_status=open&application_status=upcoming.",
+        "open, upcoming, likely_closed, closed, unknown. Repeatable, e.g. "
+        "?application_status=open&application_status=upcoming.",
     ),
     starts_after: Optional[date] = Query(None, description="Only postings that could start on or after this date"),
     starts_before: Optional[date] = Query(None, description="Only postings that could start on or before this date"),
@@ -191,6 +231,7 @@ def list_predocs(
         writing_sample=writing_sample,
     )
     rows = [_enrich(row) for row in rows]
+    rows = _dedupe_rows(rows)
 
     if application_status_in:
         rows = [r for r in rows if r["application_status"] in application_status_in]
@@ -215,4 +256,6 @@ def get_predoc(predoc_id: str):
     if row is None:
         raise HTTPException(404, "Predoc posting not found")
 
-    return _enrich(row)
+    row = _enrich(row)
+    row["links"] = [{"url": row["url"], "source_name": row["source_name"]}]
+    return row

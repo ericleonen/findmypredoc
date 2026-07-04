@@ -36,10 +36,16 @@ Reads `DATABASE_URL` from `service/.env.local` (the same Neon connection string
 season) — `app/dates.py` parses each into an `(earliest, latest)` range so they can be
 ordered and range-filtered consistently regardless of precision.
 
-- `application_status` (repeatable) — `open`, `upcoming`, `closed`, or `unknown`, computed
-  from today's date vs. the parsed `app_opens`/`app_closes` range. A posting with no closes
-  date is treated as still open; one with no opens date is treated as already open; one with
-  neither is `unknown`.
+- `application_status` (repeatable) — `open`, `upcoming`, `likely_closed`, `closed`, or
+  `unknown`, computed from today's date vs. the parsed `pos_starts`/`app_opens`/`app_closes`
+  ranges (see `dates.application_status`):
+  - `closed` if the position's start date has passed (regardless of the application window),
+    or if a closes date is known and has passed.
+  - `likely_closed` if no closes date is known but an opens date is, and more than an assumed
+    one-month application window has elapsed since opening.
+  - `upcoming` if an opens date is known and hasn't arrived yet.
+  - `unknown` if neither an opens nor a closes date could be determined.
+  - `open` otherwise.
 - `starts_after` / `starts_before`, `opens_after` / `opens_before`, `closes_after` /
   `closes_before` — each pair filters to postings whose parsed date range overlaps
   `[after, before]`. A posting with no parseable date for that field never matches an
@@ -52,8 +58,17 @@ ordered and range-filtered consistently regardless of precision.
 **Sorting:** `sort` — `recommended` (default), `starts`, `opens`, `closes`, or
 `institution`; prefix with `-` to reverse (e.g. `-starts`). Postings with an unparseable/
 missing value for the chosen sort field always sort last. `recommended` groups by
-`application_status` (open, then upcoming, then unknown, then closed), then within `open`
-by soonest `closes` date and within `upcoming` by soonest `opens` date, then by soonest
-`starts` date, then institution — i.e. the postings a student would want to see first.
+`application_status` (open, then upcoming, then unknown, then likely_closed, then closed),
+then within `open` by soonest `closes` date and within `upcoming` by soonest `opens` date,
+then by soonest `starts` date, then institution — i.e. the postings a student would want to
+see first.
 
 **Pagination:** `limit` (default 50, max 200), `offset`.
+
+**Deduplication.** Rows that are identical across every field in the standard/first-class
+filters above (institution, title, location, length, letters of recommendation, writing
+sample, and the raw starts/opens/closes strings) except `url`/`source` are merged into one
+posting — the same posting is sometimes mirrored at a different URL, or picked up by more
+than one aggregator. The merged posting's top-level `id`/`url`/`source_name` are the
+first-seen row's; every url that pointed to it (including that first one) is listed in
+`links` as `{url, source_name}` pairs.

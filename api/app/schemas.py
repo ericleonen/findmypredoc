@@ -11,11 +11,17 @@ class Source(BaseModel):
     posting_count: int
 
 
+class PredocLink(BaseModel):
+    url: str
+    source_name: Optional[str]
+
+
 class Predoc(BaseModel):
     id: str
     source_id: Optional[str]
     source_name: Optional[str]
     url: str
+    links: list[PredocLink]
 
     institution: Optional[str]
     title: Optional[str]

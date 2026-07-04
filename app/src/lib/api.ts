@@ -1,10 +1,16 @@
-export type ApplicationStatus = "open" | "upcoming" | "closed" | "unknown";
+export type ApplicationStatus = "open" | "upcoming" | "likely_closed" | "closed" | "unknown";
+
+export type PredocLink = {
+  url: string;
+  source_name: string | null;
+};
 
 export type Predoc = {
   id: string;
   source_id: string | null;
   source_name: string | null;
   url: string;
+  links: PredocLink[];
 
   institution: string | null;
   title: string | null;
