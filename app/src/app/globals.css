@@ -4,4 +4,48 @@
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
   --font-serif: var(--font-fraunces);
+
+  /* Neo-brutalism palette: pastel money-green + white/gray, ink-black borders. */
+  --color-ink: #111111;
+  --color-paper: #fbfbf8;
+  --color-mint-50: #eefdf3;
+  --color-mint-100: #d7f8e2;
+  --color-mint-200: #b3f0c8;
+  --color-mint-300: #86e3ad;
+  --color-mint-400: #59d18f;
+  --color-mint-500: #33b873;
+  --color-mint-600: #249259;
+  --color-stone-150: #ececec;
+}
+
+@layer base {
+  body {
+    background-color: var(--color-paper);
+    background-image:
+      linear-gradient(var(--color-stone-150) 1px, transparent 1px),
+      linear-gradient(90deg, var(--color-stone-150) 1px, transparent 1px);
+    background-size: 28px 28px;
+  }
+}
+
+@layer utilities {
+  /* Hard, offset drop-shadow with no blur -- the signature brutalist "sticker" look. */
+  .shadow-brutal {
+    box-shadow: 4px 4px 0 0 var(--color-ink);
+  }
+  .shadow-brutal-sm {
+    box-shadow: 3px 3px 0 0 var(--color-ink);
+  }
+  .shadow-brutal-lg {
+    box-shadow: 8px 8px 0 0 var(--color-ink);
+  }
+
+  /* Press effect: shift the element into its own shadow on interaction. */
+  .press-brutal {
+    transition: transform 0.1s ease, box-shadow 0.1s ease;
+  }
+  .press-brutal:active {
+    transform: translate(3px, 3px);
+    box-shadow: 0 0 0 0 var(--color-ink);
+  }
 }

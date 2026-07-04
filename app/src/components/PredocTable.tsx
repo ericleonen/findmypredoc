@@ -2,10 +2,10 @@ import { ExternalLink } from "lucide-react";
 import type { Predoc, ApplicationStatus } from "@/lib/api";
 
 const STATUS_STYLES: Record<ApplicationStatus, { label: string; dot: string; text: string }> = {
-  open: { label: "Open", dot: "bg-emerald-500", text: "text-emerald-700" },
+  open: { label: "Open", dot: "bg-mint-500", text: "text-mint-600" },
   upcoming: { label: "Upcoming", dot: "bg-amber-500", text: "text-amber-700" },
-  closed: { label: "Closed", dot: "bg-stone-300", text: "text-stone-400" },
-  unknown: { label: "Unknown", dot: "bg-stone-300", text: "text-stone-400" },
+  closed: { label: "Closed", dot: "bg-ink/30", text: "text-ink/40" },
+  unknown: { label: "Unknown", dot: "bg-ink/30", text: "text-ink/40" },
 };
 
 function StatusBadge({ predoc }: { predoc: Predoc }) {
@@ -19,11 +19,11 @@ function StatusBadge({ predoc }: { predoc: Predoc }) {
 
   return (
     <div className="flex flex-col gap-0.5">
-      <span className={`flex items-center gap-1.5 text-sm font-medium ${style.text}`}>
-        <span className={`h-1.5 w-1.5 rounded-full ${style.dot}`} />
+      <span className={`flex items-center gap-1.5 text-sm font-bold ${style.text}`}>
+        <span className={`h-2 w-2 rounded-full border border-ink/20 ${style.dot}`} />
         {style.label}
       </span>
-      {detail && <span className="text-xs text-stone-400">{detail}</span>}
+      {detail && <span className="text-xs text-ink/50">{detail}</span>}
     </div>
   );
 }
@@ -31,36 +31,36 @@ function StatusBadge({ predoc }: { predoc: Predoc }) {
 export default function PredocTable({ items }: { items: Predoc[] }) {
   if (items.length === 0) {
     return (
-      <div className="flex flex-col items-center gap-2 py-24 text-center text-stone-400">
-        <p className="text-lg">No postings match your filters.</p>
-        <p className="text-sm">Try widening your search.</p>
+      <div className="flex flex-col items-center gap-2 rounded-md border-2 border-ink bg-paper py-24 text-center shadow-brutal">
+        <p className="text-lg font-bold">No postings match your filters.</p>
+        <p className="text-sm text-ink/50">Try widening your search.</p>
       </div>
     );
   }
 
   return (
-    <div className="overflow-x-auto rounded-xl border border-stone-200 bg-white shadow-sm">
+    <div className="overflow-x-auto rounded-md border-2 border-ink bg-paper shadow-brutal">
       <table className="w-full min-w-[720px] text-left text-sm">
         <thead>
-          <tr className="border-b border-stone-200 text-xs uppercase tracking-wide text-stone-400">
-            <th className="px-5 py-3 font-medium">Position</th>
-            <th className="px-5 py-3 font-medium">Location</th>
-            <th className="px-5 py-3 font-medium">Starts</th>
-            <th className="px-5 py-3 font-medium">Status</th>
-            <th className="px-5 py-3 font-medium" />
+          <tr className="border-b-2 border-ink bg-mint-200 text-xs font-bold uppercase tracking-wide text-ink">
+            <th className="px-5 py-3">Position</th>
+            <th className="px-5 py-3">Location</th>
+            <th className="px-5 py-3">Starts</th>
+            <th className="px-5 py-3">Status</th>
+            <th className="px-5 py-3" />
           </tr>
         </thead>
-        <tbody className="divide-y divide-stone-100">
+        <tbody className="divide-y-2 divide-ink/10">
           {items.map((predoc) => (
-            <tr key={predoc.id} className="group hover:bg-stone-50/80 transition-colors">
+            <tr key={predoc.id} className="group hover:bg-mint-50 transition-colors">
               <td className="px-5 py-4 align-top">
-                <div className="font-medium text-stone-900">
+                <div className="font-bold text-ink">
                   {predoc.institution ?? "Unknown institution"}
                 </div>
-                {predoc.title && <div className="text-stone-500">{predoc.title}</div>}
+                {predoc.title && <div className="text-ink/60">{predoc.title}</div>}
               </td>
-              <td className="px-5 py-4 align-top text-stone-600">{predoc.location ?? "—"}</td>
-              <td className="px-5 py-4 align-top text-stone-600">{predoc.starts ?? "—"}</td>
+              <td className="px-5 py-4 align-top text-ink/70">{predoc.location ?? "—"}</td>
+              <td className="px-5 py-4 align-top text-ink/70">{predoc.starts ?? "—"}</td>
               <td className="px-5 py-4 align-top">
                 <StatusBadge predoc={predoc} />
               </td>
@@ -69,10 +69,10 @@ export default function PredocTable({ items }: { items: Predoc[] }) {
                   href={predoc.url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center gap-1 text-stone-400 opacity-0 transition-opacity group-hover:opacity-100 hover:text-teal-700"
+                  className="inline-flex items-center gap-1 rounded border-2 border-transparent p-1 text-ink/50 opacity-0 transition-opacity group-hover:opacity-100 hover:border-ink hover:bg-mint-200 hover:text-ink"
                   aria-label={`Open posting for ${predoc.institution ?? "this position"}`}
                 >
-                  <ExternalLink size={16} strokeWidth={1.75} />
+                  <ExternalLink size={16} strokeWidth={2} />
                 </a>
               </td>
             </tr>
