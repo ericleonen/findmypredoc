@@ -41,6 +41,20 @@ export type PredocFilters = {
   sort?: string;
   offset?: number;
   limit?: number;
+
+  // Advanced filters
+  title?: string;
+  location?: string;
+  source_name?: string;
+  min_letters_of_recommendation?: number;
+  max_letters_of_recommendation?: number;
+  writing_sample?: boolean;
+  starts_after?: string;
+  starts_before?: string;
+  opens_after?: string;
+  opens_before?: string;
+  closes_after?: string;
+  closes_before?: string;
 };
 
 /**
@@ -63,6 +77,25 @@ export async function fetchPredocs(filters: PredocFilters): Promise<PredocList> 
     // title together, since that's what a free-text search box implies to a user.
     params.append("institution", filters.search);
   }
+  if (filters.title) params.set("title", filters.title);
+  if (filters.location) params.set("location", filters.location);
+  if (filters.source_name) params.set("source_name", filters.source_name);
+  if (filters.min_letters_of_recommendation !== undefined) {
+    params.set("min_letters_of_recommendation", String(filters.min_letters_of_recommendation));
+  }
+  if (filters.max_letters_of_recommendation !== undefined) {
+    params.set("max_letters_of_recommendation", String(filters.max_letters_of_recommendation));
+  }
+  if (filters.writing_sample !== undefined) {
+    params.set("writing_sample", String(filters.writing_sample));
+  }
+  if (filters.starts_after) params.set("starts_after", filters.starts_after);
+  if (filters.starts_before) params.set("starts_before", filters.starts_before);
+  if (filters.opens_after) params.set("opens_after", filters.opens_after);
+  if (filters.opens_before) params.set("opens_before", filters.opens_before);
+  if (filters.closes_after) params.set("closes_after", filters.closes_after);
+  if (filters.closes_before) params.set("closes_before", filters.closes_before);
+
   params.set("sort", filters.sort ?? "recommended");
   params.set("limit", String(filters.limit ?? 50));
   params.set("offset", String(filters.offset ?? 0));

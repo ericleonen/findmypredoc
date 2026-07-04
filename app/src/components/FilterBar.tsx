@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter, usePathname, useSearchParams } from "next/navigation";
-import { Search, CircleDot, Clock, CircleOff, ArrowUpDown } from "lucide-react";
+import { Search, CircleDot, Clock, CircleOff, ArrowUpDown, SlidersHorizontal, X } from "lucide-react";
 import { useCallback, useState, useTransition, type ComponentType, type FormEvent } from "react";
 import type { ApplicationStatus } from "@/lib/api";
 
@@ -18,12 +18,32 @@ const SORT_OPTIONS = [
   { value: "institution", label: "Institution (A-Z)" },
 ];
 
+const ADVANCED_PARAM_KEYS = [
+  "title",
+  "location",
+  "source_name",
+  "min_letters_of_recommendation",
+  "max_letters_of_recommendation",
+  "writing_sample",
+  "starts_after",
+  "starts_before",
+  "opens_after",
+  "opens_before",
+  "closes_after",
+  "closes_before",
+];
+
+const inputClass =
+  "w-full rounded-md border-2 border-ink bg-paper px-3 py-1.5 text-sm text-ink placeholder:text-ink/40 focus:outline-none focus:ring-2 focus:ring-mint-500";
+
 export default function FilterBar() {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const [, startTransition] = useTransition();
   const [search, setSearch] = useState(searchParams.get("institution") ?? "");
+  const hasAdvancedInUrl = ADVANCED_PARAM_KEYS.some((key) => searchParams.get(key));
+  const [showAdvanced, setShowAdvanced] = useState(hasAdvancedInUrl);
 
   const activeStatuses = searchParams.getAll("application_status") as ApplicationStatus[];
 
@@ -65,65 +85,238 @@ export default function FilterBar() {
     });
   };
 
+  const setAdvancedField = (key: string, value: string) => {
+    updateParams((params) => {
+      if (value) params.set(key, value);
+      else params.delete(key);
+    });
+  };
+
+  const clearAdvanced = () => {
+    updateParams((params) => {
+      ADVANCED_PARAM_KEYS.forEach((key) => params.delete(key));
+    });
+  };
+
   return (
-    <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-      <div className="flex items-center gap-2">
-        {STATUS_OPTIONS.map(({ value, label, icon: Icon }) => {
-          const active = activeStatuses.includes(value);
-          return (
-            <button
-              key={value}
-              type="button"
-              onClick={() => toggleStatus(value)}
-              aria-pressed={active}
-              className={`flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-sm transition-colors ${
-                active
-                  ? "border-teal-700 bg-teal-700 text-white"
-                  : "border-stone-200 bg-white text-stone-600 hover:border-stone-300"
-              }`}
-            >
-              <Icon size={14} strokeWidth={2} />
-              {label}
-            </button>
-          );
-        })}
-      </div>
+    <div className="mb-6 flex flex-col gap-3">
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+        <div className="flex flex-wrap items-center gap-2">
+          {STATUS_OPTIONS.map(({ value, label, icon: Icon }) => {
+            const active = activeStatuses.includes(value);
+            return (
+              <button
+                key={value}
+                type="button"
+                onClick={() => toggleStatus(value)}
+                aria-pressed={active}
+                className={`flex items-center gap-1.5 rounded-md border-2 border-ink px-3 py-1.5 text-sm font-semibold press-brutal ${
+                  active ? "bg-mint-400 shadow-brutal-sm" : "bg-paper hover:bg-mint-100 shadow-brutal-sm"
+                }`}
+              >
+                <Icon size={14} strokeWidth={2} />
+                {label}
+              </button>
+            );
+          })}
 
-      <div className="flex items-center gap-2">
-        <form onSubmit={submitSearch} className="relative">
-          <Search
-            size={15}
-            strokeWidth={1.75}
-            className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-stone-400"
-          />
-          <input
-            type="text"
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            placeholder="Search institution..."
-            className="w-full rounded-full border border-stone-200 bg-white py-1.5 pl-9 pr-3 text-sm text-stone-700 placeholder:text-stone-400 focus:border-teal-700 focus:outline-none sm:w-56"
-          />
-        </form>
-
-        <div className="relative">
-          <ArrowUpDown
-            size={14}
-            strokeWidth={1.75}
-            className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-stone-400"
-          />
-          <select
-            value={searchParams.get("sort") ?? "recommended"}
-            onChange={(e) => changeSort(e.target.value)}
-            className="appearance-none rounded-full border border-stone-200 bg-white py-1.5 pl-8 pr-8 text-sm text-stone-600 focus:border-teal-700 focus:outline-none"
+          <button
+            type="button"
+            onClick={() => setShowAdvanced((v) => !v)}
+            aria-pressed={showAdvanced}
+            className={`flex items-center gap-1.5 rounded-md border-2 border-ink px-3 py-1.5 text-sm font-semibold press-brutal ${
+              showAdvanced ? "bg-ink text-paper shadow-brutal-sm" : "bg-paper hover:bg-mint-100 shadow-brutal-sm"
+            }`}
           >
-            {SORT_OPTIONS.map((opt) => (
-              <option key={opt.value} value={opt.value}>
-                {opt.label}
-              </option>
-            ))}
-          </select>
+            <SlidersHorizontal size={14} strokeWidth={2} />
+            Advanced
+          </button>
+        </div>
+
+        <div className="flex items-center gap-2">
+          <form onSubmit={submitSearch} className="relative">
+            <Search
+              size={15}
+              strokeWidth={2}
+              className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-ink/50"
+            />
+            <input
+              type="text"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              placeholder="Search institution..."
+              className={`${inputClass} pl-9 shadow-brutal-sm sm:w-56`}
+            />
+          </form>
+
+          <div className="relative">
+            <ArrowUpDown
+              size={14}
+              strokeWidth={2}
+              className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-ink/50"
+            />
+            <select
+              value={searchParams.get("sort") ?? "recommended"}
+              onChange={(e) => changeSort(e.target.value)}
+              className={`${inputClass} appearance-none pl-8 pr-8 shadow-brutal-sm`}
+            >
+              {SORT_OPTIONS.map((opt) => (
+                <option key={opt.value} value={opt.value}>
+                  {opt.label}
+                </option>
+              ))}
+            </select>
+          </div>
         </div>
       </div>
+
+      {showAdvanced && (
+        <div className="rounded-md border-2 border-ink bg-mint-50 p-4 shadow-brutal-sm">
+          <div className="mb-3 flex items-center justify-between">
+            <h3 className="text-xs font-bold uppercase tracking-wide text-ink/70">
+              Advanced filters
+            </h3>
+            <button
+              type="button"
+              onClick={clearAdvanced}
+              className="flex items-center gap-1 text-xs font-semibold text-ink/60 hover:text-ink"
+            >
+              <X size={13} strokeWidth={2} />
+              Clear
+            </button>
+          </div>
+
+          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
+            <label className="flex flex-col gap-1 text-xs font-semibold uppercase tracking-wide text-ink/60">
+              Title contains
+              <input
+                type="text"
+                defaultValue={searchParams.get("title") ?? ""}
+                onBlur={(e) => setAdvancedField("title", e.target.value)}
+                className={inputClass}
+                placeholder="e.g. research assistant"
+              />
+            </label>
+
+            <label className="flex flex-col gap-1 text-xs font-semibold uppercase tracking-wide text-ink/60">
+              Location contains
+              <input
+                type="text"
+                defaultValue={searchParams.get("location") ?? ""}
+                onBlur={(e) => setAdvancedField("location", e.target.value)}
+                className={inputClass}
+                placeholder="e.g. remote, Boston"
+              />
+            </label>
+
+            <label className="flex flex-col gap-1 text-xs font-semibold uppercase tracking-wide text-ink/60">
+              Source
+              <input
+                type="text"
+                defaultValue={searchParams.get("source_name") ?? ""}
+                onBlur={(e) => setAdvancedField("source_name", e.target.value)}
+                className={inputClass}
+                placeholder="e.g. NBER"
+              />
+            </label>
+
+            <label className="flex flex-col gap-1 text-xs font-semibold uppercase tracking-wide text-ink/60">
+              Min letters of rec.
+              <input
+                type="number"
+                min={0}
+                defaultValue={searchParams.get("min_letters_of_recommendation") ?? ""}
+                onBlur={(e) => setAdvancedField("min_letters_of_recommendation", e.target.value)}
+                className={inputClass}
+              />
+            </label>
+
+            <label className="flex flex-col gap-1 text-xs font-semibold uppercase tracking-wide text-ink/60">
+              Max letters of rec.
+              <input
+                type="number"
+                min={0}
+                defaultValue={searchParams.get("max_letters_of_recommendation") ?? ""}
+                onBlur={(e) => setAdvancedField("max_letters_of_recommendation", e.target.value)}
+                className={inputClass}
+              />
+            </label>
+
+            <label className="flex flex-col gap-1 text-xs font-semibold uppercase tracking-wide text-ink/60">
+              Writing sample
+              <select
+                defaultValue={searchParams.get("writing_sample") ?? ""}
+                onChange={(e) => setAdvancedField("writing_sample", e.target.value)}
+                className={inputClass}
+              >
+                <option value="">Any</option>
+                <option value="true">Required</option>
+                <option value="false">Not required</option>
+              </select>
+            </label>
+
+            <label className="flex flex-col gap-1 text-xs font-semibold uppercase tracking-wide text-ink/60">
+              Starts after
+              <input
+                type="date"
+                defaultValue={searchParams.get("starts_after") ?? ""}
+                onChange={(e) => setAdvancedField("starts_after", e.target.value)}
+                className={inputClass}
+              />
+            </label>
+
+            <label className="flex flex-col gap-1 text-xs font-semibold uppercase tracking-wide text-ink/60">
+              Starts before
+              <input
+                type="date"
+                defaultValue={searchParams.get("starts_before") ?? ""}
+                onChange={(e) => setAdvancedField("starts_before", e.target.value)}
+                className={inputClass}
+              />
+            </label>
+
+            <label className="flex flex-col gap-1 text-xs font-semibold uppercase tracking-wide text-ink/60">
+              Opens after
+              <input
+                type="date"
+                defaultValue={searchParams.get("opens_after") ?? ""}
+                onChange={(e) => setAdvancedField("opens_after", e.target.value)}
+                className={inputClass}
+              />
+            </label>
+
+            <label className="flex flex-col gap-1 text-xs font-semibold uppercase tracking-wide text-ink/60">
+              Opens before
+              <input
+                type="date"
+                defaultValue={searchParams.get("opens_before") ?? ""}
+                onChange={(e) => setAdvancedField("opens_before", e.target.value)}
+                className={inputClass}
+              />
+            </label>
+
+            <label className="flex flex-col gap-1 text-xs font-semibold uppercase tracking-wide text-ink/60">
+              Closes after
+              <input
+                type="date"
+                defaultValue={searchParams.get("closes_after") ?? ""}
+                onChange={(e) => setAdvancedField("closes_after", e.target.value)}
+                className={inputClass}
+              />
+            </label>
+
+            <label className="flex flex-col gap-1 text-xs font-semibold uppercase tracking-wide text-ink/60">
+              Closes before
+              <input
+                type="date"
+                defaultValue={searchParams.get("closes_before") ?? ""}
+                onChange={(e) => setAdvancedField("closes_before", e.target.value)}
+                className={inputClass}
+              />
+            </label>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
