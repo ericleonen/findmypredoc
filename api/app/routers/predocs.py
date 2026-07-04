@@ -38,7 +38,7 @@ def _select_query() -> str:
             p.app_closes AS closes
         FROM predoc p
         LEFT JOIN source s ON s.id = p.source_id
-        WHERE p.success = true
+        WHERE p.error IS NULL
     """
 
 

@@ -127,13 +127,16 @@ itself. Run scripts here with the same venv used for the package:
 
 `run_pipeline.py` is the job that refreshes the Neon database: for each of the four sources,
 upserts a `source` row (matched by name), fetches its posting URLs, skips any URL already in
-`predoc` (success or failure — postings are assumed permanent, so a prior failure is never
-retried), and for the rest runs `pipeline.read` + `pipeline.extract` and inserts a row
-(`success=True` with the extracted fields, or `success=False` with all fields null on any
-exception). `predoc.id` / `source.id` are DB-generated (`gen_random_uuid()` default) and
-`predoc.url` is unique, so the insert uses `ON CONFLICT (url) DO NOTHING` as a second line of
-defense against dupes. Tracks and reports running LLM cost (`PRICING_PER_MILLION_TOKENS`) in
-the `tqdm` progress bar.
+`predoc` (has any row at all, error or not — postings are assumed permanent, so a prior
+failure is never retried by default), and for the rest runs `pipeline.read` + `pipeline.extract`
+and inserts a row (`error IS NULL` with the extracted fields on success, or `error` set to
+`"READ: ..."` / `"EXTRACT: ..."` — the latter also covering the extraction schema's own
+validation errors — with all other fields null, so a failure can be traced to the reader or
+the LLM). `predoc.id` / `source.id` are DB-generated (`gen_random_uuid()` default) and
+`predoc.url` is unique, so the insert is an upsert (`ON CONFLICT (url) DO UPDATE`), which also
+lets `--overwrite-where`/`--from-db` reprocess specific rows in place (see the script's own
+`--help`). Tracks and reports running LLM cost (`PRICING_PER_MILLION_TOKENS`) in the `tqdm`
+progress bar.
 
 Run manually today (`.venv.dev/Scripts/python.exe service/run_pipeline.py`); not yet wired to
 a scheduler (see `service/README.md` for the undecided hosting mechanism). Neon connection

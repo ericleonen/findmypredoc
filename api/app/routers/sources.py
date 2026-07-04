@@ -11,7 +11,7 @@ def list_sources():
     with db.pool.connection() as conn:
         rows = conn.execute(
             """
-            SELECT s.id::text AS id, s.name, s.url, count(p.id) FILTER (WHERE p.success) AS posting_count
+            SELECT s.id::text AS id, s.name, s.url, count(p.id) FILTER (WHERE p.error IS NULL) AS posting_count
             FROM source s
             LEFT JOIN predoc p ON p.source_id = s.id
             GROUP BY s.id, s.name, s.url

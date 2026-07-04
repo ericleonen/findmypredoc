@@ -18,7 +18,7 @@ Reads `DATABASE_URL` from `service/.env.local` (the same Neon connection string
 
 ## Endpoints
 
-- `GET /predocs` — list postings (`success = true` only). Filters and sorting below.
+- `GET /predocs` — list postings (`error IS NULL` only, i.e. successfully-extracted). Filters and sorting below.
 - `GET /predocs/{id}` — a single posting.
 - `GET /sources` — the aggregator sources, with a count of successfully-extracted postings each.
 
