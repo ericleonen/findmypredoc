@@ -18,7 +18,7 @@
         "starts": {
             "nullable": true,
             "type": "string",
-            "description": "The date when the position starts. Prefer an exact date in YYYY-MM-DD format if one is stated. If only a month and year are known, use 'Month YYYY' (e.g. 'July 2026'). If only a season and year are known, use 'Season YYYY' (e.g. 'Summer 2026')."
+            "description": "The date when the position starts. Prefer an exact date in YYYY-MM-DD format if one is stated. If only a month and year are known, use 'Month YYYY' (e.g. 'July 2026'). If only a season and year are known, use 'Season YYYY' (e.g. 'Summer 2026'). Must be for the same hiring cycle as the application window below, not a past or generic cohort's start date."
         },
         "length": {
             "nullable": true,

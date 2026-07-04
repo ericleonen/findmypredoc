@@ -98,9 +98,21 @@ Early-stage / work-in-progress. Two intended layers, meant to compose as
   `{nullable, type, description}`. `format_schema.py` expands that compact schema into a strict
   JSON Schema where every field becomes `{value, why}` — `why` requires a brief explanation in
   the model's own words (not a verbatim quote) grounding each extracted value. When changing
-  extracted fields, edit `schema.json`, not the generated JSON Schema.
+  extracted fields, edit `schema.json`, not the generated JSON Schema. After the tool call
+  returns, `_null_inconsistent_starts` nulls `position.starts` if it's inconsistent with
+  `application.opens` (see below) using `dates.py`'s fuzzy-date parser (a small copy of
+  `api/app/dates.py`'s, kept separate since `api/` and `findmypredoc/` are independent
+  deployables).
 
 The default extraction model is `claude-opus-4-8` (see `pipeline/extract/__init__.py`).
+
+**Start/application-cycle consistency.** Postings often describe a recurring position (e.g.
+"predocs start each summer") alongside a specific upcoming application cycle -- these can
+describe different hiring cycles, and the model can otherwise pair a past/generic start date
+with the next cycle's application window. The system prompt instructs the model to infer
+`position.starts` for the same cycle as `application.opens`/`application.closes`; as a
+backstop, `_null_inconsistent_starts` nulls `position.starts` if it falls entirely before
+`application.opens` could even open (rather than surfacing a self-contradictory posting).
 
 ### Conventions
 
@@ -142,8 +154,14 @@ validation errors — with all other fields null, so a failure can be traced to 
 the LLM). `predoc.id` / `source.id` are DB-generated (`gen_random_uuid()` default) and
 `predoc.url` is unique, so the insert is an upsert (`ON CONFLICT (url) DO UPDATE`), which also
 lets `--overwrite-where`/`--from-db` reprocess specific rows in place (see the script's own
-`--help`). Tracks and reports running LLM cost (`PRICING_PER_MILLION_TOKENS`) in the `tqdm`
-progress bar.
+`--help`). `predoc` also has six generated columns -- `pos_starts_earliest/latest`,
+`app_opens_earliest/latest`, `app_closes_earliest/latest` -- computed from the free-text date
+fields by `fuzzy_date_earliest`/`fuzzy_date_latest` SQL functions (see
+`service/schema/date_columns.sql`, idempotent, mirrors `api/app/dates.py`'s parsing). These
+make data-quality auditing a plain query, e.g. `WHERE pos_starts_latest < app_opens_earliest`
+finds postings whose start date predates the application window (the same check
+`pipeline.extract` now runs post-extraction, see above). Tracks and reports running LLM cost
+(`PRICING_PER_MILLION_TOKENS`) in the `tqdm` progress bar.
 
 Run manually today (`.venv.dev/Scripts/python.exe service/run_pipeline.py`); not yet wired to
 a scheduler (see `service/README.md` for the undecided hosting mechanism). Neon connection
