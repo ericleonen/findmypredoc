@@ -1,0 +1,65 @@
+name: Ingest predoc postings
+
+# Refreshes the Neon predoc/source tables by running service/run_pipeline.py -- see
+# service/README.md and the repo-root CLAUDE.md for what the pipeline does.
+
+on:
+  schedule:
+    # 12:17 UTC daily (off the hour to avoid the top-of-hour GitHub Actions rush).
+    - cron: "17 12 * * *"
+  workflow_dispatch:
+    inputs:
+      overwrite_where:
+        description: >
+          Optional: raw SQL boolean expression (predoc.*/source.* columns) selecting
+          existing predoc rows to reprocess instead of skip, passed as run_pipeline.py's
+          --overwrite-where. Leave blank for a normal run.
+        required: false
+        default: ""
+      from_db:
+        description: "Reprocess matching rows from the DB instead of re-scraping sources (requires overwrite_where above)"
+        required: false
+        type: boolean
+        default: false
+
+concurrency:
+  group: ingest-predoc-postings
+  cancel-in-progress: false
+
+jobs:
+  ingest:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: "pip"
+          cache-dependency-path: |
+            findmypredoc/pyproject.toml
+            service/requirements.txt
+
+      - name: Install findmypredoc + service dependencies
+        run: |
+          pip install -e ./findmypredoc
+          pip install -r service/requirements.txt
+
+      - name: Install Playwright Chromium (for JS-rendered postings)
+        run: playwright install --with-deps chromium
+
+      - name: Run ingestion pipeline
+        working-directory: service
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+        run: |
+          args=()
+          if [ -n "${{ inputs.overwrite_where }}" ]; then
+            args+=(--overwrite-where "${{ inputs.overwrite_where }}")
+          fi
+          if [ "${{ inputs.from_db }}" = "true" ]; then
+            args+=(--from-db)
+          fi
+          python run_pipeline.py "${args[@]}"
