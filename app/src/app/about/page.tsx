@@ -50,7 +50,7 @@ export default function AboutPage() {
           <p>
             Built by{" "}
             <a
-              href="https://github.com/ericleonen"
+              href="https://ericleonen.com"
               target="_blank"
               rel="noopener noreferrer"
               className="font-semibold text-ink underline decoration-mint-500 decoration-2 underline-offset-2 hover:bg-mint-100"
