@@ -1,4 +1,11 @@
 {
+    "meta": {
+        "is_predoc_posting": {
+            "nullable": false,
+            "type": "boolean",
+            "description": "Whether this text actually describes a specific predoctoral research assistant/fellow job posting. False if it's unrelated content, a blocked/error page, a generic careers or listings page with no specific posting, or any other kind of document. If false, the other fields are ignored, but still fill them with any schema-valid value (e.g. an empty string) since they're required."
+        }
+    },
     "position": {
         "institution": {
             "nullable": false,
@@ -6,7 +13,7 @@
             "description": "The full name of the institution or organization offering the position"
         },
         "title": {
-            "nullable": true,
+            "nullable": false,
             "type": "string",
             "description": "The title of the offered position"
         },
@@ -18,7 +25,7 @@
         "starts": {
             "nullable": true,
             "type": "string",
-            "description": "The date when the position starts. Prefer an exact date in YYYY-MM-DD format if one is stated. If only a month and year are known, use 'Month YYYY' (e.g. 'July 2026'). If only a season and year are known, use 'Season YYYY' (e.g. 'Summer 2026'). Must be for the same hiring cycle as the application window below, not a past or generic cohort's start date."
+            "description": "The date when the position starts. Prefer an exact date in YYYY-MM-DD format if one is stated. If only a month and year are known, use 'Month YYYY' (e.g. 'July 2026'). If only a season and year are known, use 'Season YYYY' (e.g. 'Summer 2026'). Must be for the same hiring cycle as the application window below (i.e. after applications open), not a past or generic cohort's start date."
         },
         "length": {
             "nullable": true,

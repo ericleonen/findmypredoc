@@ -1,6 +1,7 @@
 import { ExternalLink } from "lucide-react";
+import type { ReactNode } from "react";
 import type { Predoc, ApplicationStatus } from "@/lib/api";
-import { formatFuzzyDate } from "@/lib/formatDate";
+import { formatFuzzyDate, formatDateSmart } from "@/lib/formatDate";
 
 const STATUS_STYLES: Record<ApplicationStatus, { label: string; dot: string; text: string }> = {
   open: { label: "Open", dot: "bg-mint-500", text: "text-mint-600" },
@@ -20,7 +21,7 @@ function StatusBadge({ status }: { status: ApplicationStatus }) {
   );
 }
 
-function DetailRow({ label, value }: { label: string; value: string | null }) {
+function DetailRow({ label, value }: { label: string; value: ReactNode }) {
   return (
     <div className="flex items-baseline justify-between gap-3 text-sm">
       <span className="text-xs font-semibold uppercase tracking-wide text-ink/50">{label}</span>
@@ -29,11 +30,46 @@ function DetailRow({ label, value }: { label: string; value: string | null }) {
   );
 }
 
+function startsLine(starts: string | null, length: string | null): string | null {
+  const startsLabel = formatFuzzyDate(starts);
+  if (startsLabel && length) return `Starts ${startsLabel}, lasts ${length}`;
+  if (startsLabel) return `Starts ${startsLabel}`;
+  if (length) return `Lasts ${length}`;
+  return null;
+}
+
+function ApplicationLine({ opens, closes }: { opens: string | null; closes: string | null }) {
+  const opensDate = formatDateSmart(opens);
+  const closesDate = formatDateSmart(closes);
+  if (!opensDate && !closesDate) return null;
+
+  return (
+    <div>
+      Application{" "}
+      {opensDate && (
+        <>
+          opens{" "}
+          <span className={opensDate.relative ? "font-semibold text-mint-600" : undefined}>
+            {opensDate.label}
+          </span>
+        </>
+      )}
+      {opensDate && closesDate && " and "}
+      {closesDate && (
+        <>
+          closes{" "}
+          <span className={closesDate.relative ? "font-semibold text-red-600" : undefined}>
+            {closesDate.label}
+          </span>
+        </>
+      )}
+    </div>
+  );
+}
+
 function PredocCard({ predoc }: { predoc: Predoc }) {
-  const starts = formatFuzzyDate(predoc.starts);
-  const opens = formatFuzzyDate(predoc.opens);
-  const closes = formatFuzzyDate(predoc.closes);
   const [primaryLink, ...otherLinks] = predoc.links;
+  const starts = startsLine(predoc.starts, predoc.length);
 
   return (
     <div className="flex flex-col gap-4 rounded-md border-2 border-ink bg-paper p-5 shadow-brutal sm:flex-row sm:justify-between">
@@ -49,22 +85,32 @@ function PredocCard({ predoc }: { predoc: Predoc }) {
         <StatusBadge status={predoc.application_status} />
 
         <div className="mt-1 flex flex-col gap-0.5 text-sm text-ink/70">
-          {starts && <div>Starts {starts}</div>}
-          {(opens || closes) && (
-            <div>
-              Application {opens && <>opens {opens}</>}
-              {opens && closes && " · "}
-              {closes && <>closes {closes}</>}
-            </div>
-          )}
+          {starts && <div>{starts}</div>}
+          <ApplicationLine opens={predoc.opens} closes={predoc.closes} />
         </div>
       </div>
 
       <div className="flex w-full flex-col gap-2 sm:w-56 sm:shrink-0 sm:border-l-2 sm:border-ink/10 sm:pl-4">
-        <DetailRow label="Source" value={predoc.source_name} />
-        <DetailRow label="Length" value={predoc.length} />
         <DetailRow
-          label="Letters of rec."
+          label="Source"
+          value={
+            predoc.source_name &&
+            (predoc.source_url ? (
+              <a
+                href={predoc.source_url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="underline decoration-mint-500 decoration-2 underline-offset-2 hover:bg-mint-100"
+              >
+                {predoc.source_name}
+              </a>
+            ) : (
+              predoc.source_name
+            ))
+          }
+        />
+        <DetailRow
+          label="Letters of recommendation"
           value={predoc.letters_of_recommendation !== null ? String(predoc.letters_of_recommendation) : null}
         />
         <DetailRow

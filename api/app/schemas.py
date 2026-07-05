@@ -20,6 +20,7 @@ class Predoc(BaseModel):
     id: str
     source_id: Optional[str]
     source_name: Optional[str]
+    source_url: Optional[str]
     url: str
     links: list[PredocLink]
 

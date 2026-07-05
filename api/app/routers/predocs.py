@@ -40,6 +40,7 @@ def _select_query() -> str:
             p.id::text AS id,
             p.source_id::text AS source_id,
             s.name AS source_name,
+            s.url AS source_url,
             p.url,
             p.pos_institution AS institution,
             p.pos_title AS title,

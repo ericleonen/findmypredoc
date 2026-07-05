@@ -49,9 +49,6 @@ export default function RootLayout({
               <h1 className="font-serif text-xl sm:text-2xl font-bold tracking-tight text-ink">
                 Find My <span className="italic">Predoc</span>
               </h1>
-              <span className="hidden sm:inline text-xs font-medium uppercase tracking-wide text-ink/60">
-                predoc listings, updated daily
-              </span>
             </Link>
             <nav className="flex flex-wrap items-center gap-2">
               {navLinks.map(({ href, label, icon: Icon, external }) =>

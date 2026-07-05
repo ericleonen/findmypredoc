@@ -1,15 +1,13 @@
 "use client";
 
 import { useRouter, usePathname, useSearchParams } from "next/navigation";
-import { Search, CircleDot, Clock, CircleSlash, CircleOff, ArrowUpDown, SlidersHorizontal, X } from "lucide-react";
+import { Search, CircleDot, Clock, ArrowUpDown, SlidersHorizontal, X } from "lucide-react";
 import { useCallback, useState, useTransition, type ComponentType, type FormEvent } from "react";
 import type { ApplicationStatus } from "@/lib/api";
 
 const STATUS_OPTIONS: { value: ApplicationStatus; label: string; icon: ComponentType<{ size?: number; strokeWidth?: number }> }[] = [
   { value: "open", label: "Open", icon: CircleDot },
   { value: "upcoming", label: "Upcoming", icon: Clock },
-  { value: "likely_closed", label: "Likely closed", icon: CircleSlash },
-  { value: "closed", label: "Closed", icon: CircleOff },
 ];
 
 const SORT_OPTIONS = [
@@ -23,21 +21,16 @@ const ADVANCED_PARAM_KEYS = [
   "title",
   "location",
   "source_name",
-  "min_letters_of_recommendation",
   "max_letters_of_recommendation",
   "writing_sample",
   "starts_after",
-  "starts_before",
-  "opens_after",
-  "opens_before",
-  "closes_after",
-  "closes_before",
+  "allow_closed",
 ];
 
 const inputClass =
   "w-full rounded-md border-2 border-ink bg-paper px-3 py-1.5 text-sm text-ink placeholder:text-ink/40 focus:outline-none focus:ring-2 focus:ring-mint-500";
 
-export default function FilterBar() {
+export default function FilterBar({ sources }: { sources: string[] }) {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -135,7 +128,7 @@ export default function FilterBar() {
         </div>
 
         <div className="flex items-center gap-2">
-          <form onSubmit={submitSearch} className="relative">
+          <form onSubmit={submitSearch} className="relative shrink-0">
             <Search
               size={15}
               strokeWidth={2}
@@ -150,7 +143,7 @@ export default function FilterBar() {
             />
           </form>
 
-          <div className="relative">
+          <div className="relative shrink-0">
             <ArrowUpDown
               size={14}
               strokeWidth={2}
@@ -159,7 +152,7 @@ export default function FilterBar() {
             <select
               value={searchParams.get("sort") ?? "recommended"}
               onChange={(e) => changeSort(e.target.value)}
-              className={`${inputClass} appearance-none pl-8 pr-8 shadow-brutal-sm`}
+              className={`${inputClass} min-w-[11rem] appearance-none pl-8 shadow-brutal-sm`}
             >
               {SORT_OPTIONS.map((opt) => (
                 <option key={opt.value} value={opt.value}>
@@ -212,28 +205,22 @@ export default function FilterBar() {
 
             <label className="flex flex-col gap-1 text-xs font-semibold uppercase tracking-wide text-ink/60">
               Source
-              <input
-                type="text"
+              <select
                 defaultValue={searchParams.get("source_name") ?? ""}
-                onBlur={(e) => setAdvancedField("source_name", e.target.value)}
+                onChange={(e) => setAdvancedField("source_name", e.target.value)}
                 className={inputClass}
-                placeholder="e.g. NBER"
-              />
+              >
+                <option value="">Any source</option>
+                {sources.map((name) => (
+                  <option key={name} value={name}>
+                    {name}
+                  </option>
+                ))}
+              </select>
             </label>
 
             <label className="flex flex-col gap-1 text-xs font-semibold uppercase tracking-wide text-ink/60">
-              Min letters of rec.
-              <input
-                type="number"
-                min={0}
-                defaultValue={searchParams.get("min_letters_of_recommendation") ?? ""}
-                onBlur={(e) => setAdvancedField("min_letters_of_recommendation", e.target.value)}
-                className={inputClass}
-              />
-            </label>
-
-            <label className="flex flex-col gap-1 text-xs font-semibold uppercase tracking-wide text-ink/60">
-              Max letters of rec.
+              Max letters of recommendation
               <input
                 type="number"
                 min={0}
@@ -266,54 +253,14 @@ export default function FilterBar() {
               />
             </label>
 
-            <label className="flex flex-col gap-1 text-xs font-semibold uppercase tracking-wide text-ink/60">
-              Starts before
+            <label className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wide text-ink/60 sm:col-span-2 lg:col-span-3">
               <input
-                type="date"
-                defaultValue={searchParams.get("starts_before") ?? ""}
-                onChange={(e) => setAdvancedField("starts_before", e.target.value)}
-                className={inputClass}
+                type="checkbox"
+                checked={searchParams.get("allow_closed") === "true"}
+                onChange={(e) => setAdvancedField("allow_closed", e.target.checked ? "true" : "")}
+                className="h-4 w-4 accent-mint-500"
               />
-            </label>
-
-            <label className="flex flex-col gap-1 text-xs font-semibold uppercase tracking-wide text-ink/60">
-              Opens after
-              <input
-                type="date"
-                defaultValue={searchParams.get("opens_after") ?? ""}
-                onChange={(e) => setAdvancedField("opens_after", e.target.value)}
-                className={inputClass}
-              />
-            </label>
-
-            <label className="flex flex-col gap-1 text-xs font-semibold uppercase tracking-wide text-ink/60">
-              Opens before
-              <input
-                type="date"
-                defaultValue={searchParams.get("opens_before") ?? ""}
-                onChange={(e) => setAdvancedField("opens_before", e.target.value)}
-                className={inputClass}
-              />
-            </label>
-
-            <label className="flex flex-col gap-1 text-xs font-semibold uppercase tracking-wide text-ink/60">
-              Closes after
-              <input
-                type="date"
-                defaultValue={searchParams.get("closes_after") ?? ""}
-                onChange={(e) => setAdvancedField("closes_after", e.target.value)}
-                className={inputClass}
-              />
-            </label>
-
-            <label className="flex flex-col gap-1 text-xs font-semibold uppercase tracking-wide text-ink/60">
-              Closes before
-              <input
-                type="date"
-                defaultValue={searchParams.get("closes_before") ?? ""}
-                onChange={(e) => setAdvancedField("closes_before", e.target.value)}
-                className={inputClass}
-              />
+              Allow closed / likely closed postings
             </label>
           </div>
         </div>
