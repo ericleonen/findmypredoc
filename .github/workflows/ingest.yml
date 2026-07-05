@@ -49,16 +49,25 @@ jobs:
       - name: Install Playwright Chromium (for JS-rendered postings)
         run: playwright install --with-deps chromium
 
+      - name: Trust GoDaddy G2 intermediate CA
+        # predoc.org's server (GoDaddy-hosted) sends only its leaf cert, omitting the
+        # intermediate -- browsers/Windows/macOS silently fetch it via the cert's AIA
+        # extension, but Linux/OpenSSL (what pipeline/__init__.py's truststore.inject_into_ssl()
+        # falls back to on Linux, since there's no unified OS trust API there) doesn't chase
+        # AIA, so verification fails with "unable to get local issuer certificate". Installing
+        # the intermediate into the runner's system trust store fixes it at the source.
+        run: |
+          curl -fsSL http://certificates.godaddy.com/repository/gdig2.crt -o /tmp/gdig2.der
+          openssl x509 -inform DER -in /tmp/gdig2.der -out /tmp/gdig2.pem
+          sudo cp /tmp/gdig2.pem /usr/local/share/ca-certificates/godaddy-g2.crt
+          sudo update-ca-certificates
+
       - name: Run ingestion pipeline
         working-directory: service
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
         run: |
-          # pipeline/__init__.py injects truststore (OS-native cert store) globally for
-          # compatibility with corporate proxies on dev machines; on this runner that lookup
-          # doesn't reliably find a CA bundle, so point it at certifi's instead.
-          export SSL_CERT_FILE=$(python -c "import certifi; print(certifi.where())")
           args=()
           if [ -n "${{ inputs.overwrite_where }}" ]; then
             args+=(--overwrite-where "${{ inputs.overwrite_where }}")
