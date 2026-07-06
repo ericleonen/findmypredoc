@@ -26,6 +26,9 @@ concurrency:
   group: ingest-predoc-postings
   cancel-in-progress: false
 
+permissions:
+  contents: write
+
 jobs:
   ingest:
     runs-on: ubuntu-latest
@@ -96,3 +99,16 @@ jobs:
             Skipped (already seen): ${{ steps.ingest.outputs.skipped }}
             Success rate: ${{ steps.ingest.outputs.success_rate }}%
             Estimated extraction cost: $${{ steps.ingest.outputs.cost }}
+
+            New postings:
+            ${{ steps.ingest.outputs.postings }}
+
+      - name: Commit updated README if new postings were found
+        if: steps.ingest.outputs.new_links != '0'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add README.md
+          git diff --cached --quiet && exit 0
+          git commit -m "Update README with latest postings found"
+          git push

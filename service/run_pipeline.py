@@ -25,6 +25,8 @@ interpolated directly into the query -- this is a local script only you run, not
 
 import argparse
 import os
+import re
+import uuid
 from pathlib import Path
 
 import psycopg
@@ -33,6 +35,10 @@ from tqdm import tqdm
 
 import pipeline
 from sources import sources
+
+README_PATH = Path(__file__).parent.parent / "README.md"
+README_MARKER_START = "<!-- LATEST_POSTINGS:START -->"
+README_MARKER_END = "<!-- LATEST_POSTINGS:END -->"
 
 load_dotenv()  # repo-root .env -> ANTHROPIC_API_KEY
 load_dotenv(Path(__file__).parent / ".env.local")  # DATABASE_URL
@@ -169,6 +175,12 @@ def process_url(cur, url: str, source_id, totals: dict) -> None:
             fields = extracted_row(extraction)
             totals["extracted"] += 1
             totals["cost"] += extraction_cost(usage)
+            totals["postings"].append(
+                {
+                    "institution": fields["pos_institution"] or "Unknown institution",
+                    "title": fields["pos_title"] or "Untitled position",
+                }
+            )
         except Exception as e:
             error = f"EXTRACT: {type(e).__name__}: {e}"
 
@@ -185,13 +197,35 @@ def _set_cost_postfix(progress: tqdm, totals: dict) -> None:
         progress.set_postfix(avg_cost=f"${totals['cost'] / totals['extracted']:.4f}")
 
 
+def render_postings_list(postings: list) -> str:
+    return "\n".join(f"- **{p['institution']}** — {p['title']}" for p in postings)
+
+
+def update_readme_postings(postings: list) -> None:
+    """
+    Rewrites the README's marked "latest postings" section with this run's newly found
+    postings, so a run that finds new postings also produces a commit -- keeping the repo
+    active enough that GitHub doesn't auto-disable the scheduled workflow after 60 days of
+    inactivity (see .github/workflows/ingest.yml).
+    """
+    readme = README_PATH.read_text(encoding="utf-8")
+    section = f"{README_MARKER_START}\n{render_postings_list(postings)}\n{README_MARKER_END}"
+    updated = re.sub(
+        rf"{re.escape(README_MARKER_START)}.*?{re.escape(README_MARKER_END)}",
+        section,
+        readme,
+        flags=re.DOTALL,
+    )
+    README_PATH.write_text(updated, encoding="utf-8")
+
+
 def main():
     args = parse_args()
 
     conn = psycopg.connect(os.environ["DATABASE_URL"], autocommit=True)
     cur = conn.cursor()
 
-    totals = {"extracted": 0, "failed": 0, "skipped": 0, "cost": 0.0}
+    totals = {"extracted": 0, "failed": 0, "skipped": 0, "cost": 0.0, "postings": []}
 
     if args.from_db:
         rows = fetch_db_urls(cur, args.overwrite_where)
@@ -228,10 +262,15 @@ def main():
         f"Total extraction cost: ${totals['cost']:.4f}"
     )
 
+    if totals["postings"]:
+        update_readme_postings(totals["postings"])
+
     # Surface this run's totals as step outputs so the ingest workflow can email a summary
     # when new links were actually found -- a no-op outside GitHub Actions (GITHUB_OUTPUT unset).
     github_output = os.environ.get("GITHUB_OUTPUT")
     if github_output:
+        postings_list = render_postings_list(totals["postings"]) or "_None._"
+        delimiter = f"ghadelim_{uuid.uuid4().hex}"
         with open(github_output, "a") as f:
             f.write(f"new_links={new_links}\n")
             f.write(f"extracted={totals['extracted']}\n")
@@ -239,6 +278,7 @@ def main():
             f.write(f"skipped={totals['skipped']}\n")
             f.write(f"success_rate={success_rate:.1f}\n")
             f.write(f"cost={totals['cost']:.4f}\n")
+            f.write(f"postings<<{delimiter}\n{postings_list}\n{delimiter}\n")
 
 
 if __name__ == "__main__":

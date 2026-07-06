@@ -6,6 +6,13 @@ DOCX, or Google Drive file), and uses the Anthropic API to extract structured fi
 institution, application deadlines, and requirements. A daily job upserts the results into a
 Postgres database, which a read-only API serves to a filterable web frontend.
 
+## Latest postings found
+
+<!-- LATEST_POSTINGS:START -->
+<!-- LATEST_POSTINGS:END -->
+
+*(Updated automatically by the daily ingestion job — see `.github/workflows/ingest.yml`.)*
+
 ## Structure
 
 - **`findmypredoc/`** — the Python scraping/extraction package (sources + read/extract pipeline).
