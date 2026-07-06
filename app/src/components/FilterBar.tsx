@@ -249,7 +249,7 @@ export default function FilterBar({ sources }: { sources: string[] }) {
                 onChange={(e) => setAdvancedField("allow_closed", e.target.checked ? "true" : "")}
                 className="h-4 w-4 accent-mint-500"
               />
-              Allow closed / likely closed postings
+              Allow closed postings
             </label>
 
             <label className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wide text-ink/60 sm:col-span-2 lg:col-span-3">
