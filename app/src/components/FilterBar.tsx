@@ -1,8 +1,8 @@
 "use client";
 
 import { useRouter, usePathname, useSearchParams } from "next/navigation";
-import { Search, CircleDot, Clock, ArrowUpDown, SlidersHorizontal, X } from "lucide-react";
-import { useCallback, useState, useTransition, type ComponentType, type FormEvent } from "react";
+import { CircleDot, Clock, ArrowUpDown, SlidersHorizontal, X } from "lucide-react";
+import { useCallback, useState, useTransition, type ComponentType } from "react";
 import type { ApplicationStatus } from "@/lib/api";
 
 const STATUS_OPTIONS: { value: ApplicationStatus; label: string; icon: ComponentType<{ size?: number; strokeWidth?: number }> }[] = [
@@ -18,6 +18,7 @@ const SORT_OPTIONS = [
 ];
 
 const ADVANCED_PARAM_KEYS = [
+  "institution",
   "title",
   "location",
   "source_name",
@@ -35,7 +36,6 @@ export default function FilterBar({ sources }: { sources: string[] }) {
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const [, startTransition] = useTransition();
-  const [search, setSearch] = useState(searchParams.get("institution") ?? "");
   const hasAdvancedInUrl = ADVANCED_PARAM_KEYS.some((key) => searchParams.get(key));
   const [showAdvanced, setShowAdvanced] = useState(hasAdvancedInUrl);
 
@@ -61,14 +61,6 @@ export default function FilterBar({ sources }: { sources: string[] }) {
         ? current.filter((s) => s !== status)
         : [...current, status];
       next.forEach((s) => params.append("application_status", s));
-    });
-  };
-
-  const submitSearch = (e: FormEvent) => {
-    e.preventDefault();
-    updateParams((params) => {
-      if (search) params.set("institution", search);
-      else params.delete("institution");
     });
   };
 
@@ -128,21 +120,6 @@ export default function FilterBar({ sources }: { sources: string[] }) {
         </div>
 
         <div className="flex items-center gap-2">
-          <form onSubmit={submitSearch} className="relative shrink-0">
-            <Search
-              size={15}
-              strokeWidth={2}
-              className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-ink/50"
-            />
-            <input
-              type="text"
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              placeholder="Search institution..."
-              className={`${inputClass} pl-9 shadow-brutal-sm sm:w-56`}
-            />
-          </form>
-
           <div className="relative shrink-0">
             <ArrowUpDown
               size={14}
@@ -181,6 +158,17 @@ export default function FilterBar({ sources }: { sources: string[] }) {
           </div>
 
           <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
+            <label className="flex flex-col gap-1 text-xs font-semibold uppercase tracking-wide text-ink/60">
+              Institution contains
+              <input
+                type="text"
+                defaultValue={searchParams.get("institution") ?? ""}
+                onBlur={(e) => setAdvancedField("institution", e.target.value)}
+                className={inputClass}
+                placeholder="e.g. MIT"
+              />
+            </label>
+
             <label className="flex flex-col gap-1 text-xs font-semibold uppercase tracking-wide text-ink/60">
               Title contains
               <input
