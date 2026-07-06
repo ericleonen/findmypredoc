@@ -68,7 +68,7 @@ function ApplicationLine({ opens, closes }: { opens: string | null; closes: stri
 }
 
 function PredocCard({ predoc }: { predoc: Predoc }) {
-  const [primaryLink, ...otherLinks] = predoc.links;
+  const [primaryLink] = predoc.links;
   const starts = startsLine(predoc.starts, predoc.length);
 
   return (
@@ -128,30 +128,6 @@ function PredocCard({ predoc }: { predoc: Predoc }) {
             <ExternalLink size={13} strokeWidth={2} />
             View posting
           </a>
-
-          {otherLinks.length > 0 && (
-            <details className="group relative">
-              <summary className="flex h-7 w-7 list-none items-center justify-center rounded-full border-2 border-ink bg-paper text-xs font-bold press-brutal [&::-webkit-details-marker]:hidden">
-                +{otherLinks.length}
-              </summary>
-              <div className="absolute right-0 z-10 mt-2 w-56 rounded-md border-2 border-ink bg-paper p-2 shadow-brutal-sm">
-                <p className="mb-1 px-2 text-xs font-semibold uppercase tracking-wide text-ink/50">
-                  Also posted at
-                </p>
-                {predoc.links.map((link, i) => (
-                  <a
-                    key={i}
-                    href={link.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="block truncate rounded px-2 py-1 text-sm hover:bg-mint-100"
-                  >
-                    {link.source_name ?? "Unknown source"}
-                  </a>
-                ))}
-              </div>
-            </details>
-          )}
         </div>
       </div>
     </div>
