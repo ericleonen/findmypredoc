@@ -10,6 +10,7 @@ type SearchParams = Promise<{
   sort?: string;
   offset?: string;
   allow_closed?: string;
+  allow_unknown?: string;
 
   title?: string;
   location?: string;
@@ -26,13 +27,17 @@ function toArray(value: string | string[] | undefined): string[] {
 
 const LIMIT = 50;
 
-// Closed/likely-closed postings are hidden by default (see the "Allow closed" advanced
-// filter) unless the user has explicitly toggled a specific status to view.
+// Closed/likely-closed and unknown-status postings are hidden by default (see the
+// "Allow closed" / "Allow unknown status" advanced filters) unless the user has
+// explicitly toggled a specific status to view.
 function resolveApplicationStatus(params: Awaited<SearchParams>): ApplicationStatus[] {
   const toggles = toArray(params.application_status) as ApplicationStatus[];
   if (toggles.length > 0) return toggles;
-  if (params.allow_closed === "true") return [];
-  return ["open", "upcoming", "unknown"];
+
+  const statuses: ApplicationStatus[] = ["open", "upcoming"];
+  if (params.allow_closed === "true") statuses.push("likely_closed", "closed");
+  if (params.allow_unknown === "true") statuses.push("unknown");
+  return statuses;
 }
 
 export default async function HomePage({ searchParams }: { searchParams: SearchParams }) {

@@ -26,6 +26,7 @@ const ADVANCED_PARAM_KEYS = [
   "writing_sample",
   "starts_after",
   "allow_closed",
+  "allow_unknown",
 ];
 
 const inputClass =
@@ -249,6 +250,16 @@ export default function FilterBar({ sources }: { sources: string[] }) {
                 className="h-4 w-4 accent-mint-500"
               />
               Allow closed / likely closed postings
+            </label>
+
+            <label className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wide text-ink/60 sm:col-span-2 lg:col-span-3">
+              <input
+                type="checkbox"
+                checked={searchParams.get("allow_unknown") === "true"}
+                onChange={(e) => setAdvancedField("allow_unknown", e.target.checked ? "true" : "")}
+                className="h-4 w-4 accent-mint-500"
+              />
+              Allow postings with unknown application status
             </label>
           </div>
         </div>
