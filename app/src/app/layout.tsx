@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono, Fraunces } from "next/font/google";
 import Link from "next/link";
 import { GitBranch, BookOpen, Info } from "lucide-react";
+import Logo from "@/components/Logo";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -46,6 +47,7 @@ export default function RootLayout({
         <header className="sticky top-0 z-50 border-b-[3px] border-ink bg-mint-200/95 backdrop-blur-sm">
           <div className="mx-auto flex max-w-5xl flex-wrap items-center justify-between gap-x-6 gap-y-2 px-6 py-3">
             <Link href="/" className="flex items-center gap-2">
+              <Logo />
               <h1 className="font-serif text-xl sm:text-2xl font-bold tracking-tight text-ink">
                 Find My <span className="italic">Predoc</span>
               </h1>
