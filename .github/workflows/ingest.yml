@@ -63,6 +63,7 @@ jobs:
           sudo update-ca-certificates
 
       - name: Run ingestion pipeline
+        id: ingest
         working-directory: service
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
@@ -76,3 +77,22 @@ jobs:
             args+=(--from-db)
           fi
           python run_pipeline.py "${args[@]}"
+
+      - name: Email summary if new links were found
+        if: steps.ingest.outputs.new_links != '0'
+        uses: dawidd6/action-send-mail@v3
+        with:
+          server_address: smtp.gmail.com
+          server_port: 465
+          username: ${{ secrets.GMAIL_USERNAME }}
+          password: ${{ secrets.GMAIL_APP_PASSWORD }}
+          from: findmypredoc <${{ secrets.GMAIL_USERNAME }}>
+          to: ericleonen@gmail.com
+          subject: "findmypredoc: ${{ steps.ingest.outputs.new_links }} new posting(s) ingested"
+          body: |
+            New links found: ${{ steps.ingest.outputs.new_links }}
+            Extracted successfully: ${{ steps.ingest.outputs.extracted }}
+            Failed: ${{ steps.ingest.outputs.failed }}
+            Skipped (already seen): ${{ steps.ingest.outputs.skipped }}
+            Success rate: ${{ steps.ingest.outputs.success_rate }}%
+            Estimated extraction cost: $${{ steps.ingest.outputs.cost }}

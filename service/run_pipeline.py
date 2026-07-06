@@ -219,10 +219,26 @@ def main():
                 process_url(cur, url, source_id, totals)
                 _set_cost_postfix(progress, totals)
 
+    new_links = totals["extracted"] + totals["failed"]
+    success_rate = (totals["extracted"] / new_links * 100) if new_links else 0.0
+
     print(
         f"\nDone. Extracted {totals['extracted']}, failed {totals['failed']}, "
-        f"skipped {totals['skipped']} already-seen URLs. Total extraction cost: ${totals['cost']:.4f}"
+        f"skipped {totals['skipped']} already-seen URLs. Success rate: {success_rate:.1f}%. "
+        f"Total extraction cost: ${totals['cost']:.4f}"
     )
+
+    # Surface this run's totals as step outputs so the ingest workflow can email a summary
+    # when new links were actually found -- a no-op outside GitHub Actions (GITHUB_OUTPUT unset).
+    github_output = os.environ.get("GITHUB_OUTPUT")
+    if github_output:
+        with open(github_output, "a") as f:
+            f.write(f"new_links={new_links}\n")
+            f.write(f"extracted={totals['extracted']}\n")
+            f.write(f"failed={totals['failed']}\n")
+            f.write(f"skipped={totals['skipped']}\n")
+            f.write(f"success_rate={success_rate:.1f}\n")
+            f.write(f"cost={totals['cost']:.4f}\n")
 
 
 if __name__ == "__main__":
