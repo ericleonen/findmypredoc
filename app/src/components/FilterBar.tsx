@@ -130,7 +130,7 @@ export default function FilterBar({ sources }: { sources: string[] }) {
             <select
               value={searchParams.get("sort") ?? "recommended"}
               onChange={(e) => changeSort(e.target.value)}
-              className={`${inputClass} min-w-[11rem] appearance-none pl-8 shadow-brutal-sm`}
+              className={`${inputClass} min-w-[11rem] appearance-none pl-8 font-semibold shadow-brutal-sm press-brutal hover:bg-mint-100`}
             >
               {SORT_OPTIONS.map((opt) => (
                 <option key={opt.value} value={opt.value}>
