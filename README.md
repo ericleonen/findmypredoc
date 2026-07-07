@@ -6,10 +6,13 @@ DOCX, or Google Drive file), and uses the Anthropic API to extract structured fi
 institution, application deadlines, and requirements. A daily job upserts the results into a
 Postgres database, which a read-only API serves to a filterable web frontend.
 
-## Latest postings found
+## Recent postings
 
-<!-- LATEST_POSTINGS:START -->
-<!-- LATEST_POSTINGS:END -->
+<!-- RECENT_POSTINGS:START -->
+<!-- RECENT_POSTINGS:END -->
+
+<!-- LAST_RAN:START -->
+<!-- LAST_RAN:END -->
 
 *(Updated automatically by the daily ingestion job — see `.github/workflows/ingest.yml`.)*
 

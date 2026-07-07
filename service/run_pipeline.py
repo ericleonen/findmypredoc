@@ -27,6 +27,7 @@ import argparse
 import os
 import re
 import uuid
+from datetime import datetime, timezone
 from pathlib import Path
 
 import psycopg
@@ -37,8 +38,11 @@ import pipeline
 from sources import sources
 
 README_PATH = Path(__file__).parent.parent / "README.md"
-README_MARKER_START = "<!-- LATEST_POSTINGS:START -->"
-README_MARKER_END = "<!-- LATEST_POSTINGS:END -->"
+RECENT_POSTINGS_START = "<!-- RECENT_POSTINGS:START -->"
+RECENT_POSTINGS_END = "<!-- RECENT_POSTINGS:END -->"
+LAST_RAN_START = "<!-- LAST_RAN:START -->"
+LAST_RAN_END = "<!-- LAST_RAN:END -->"
+RECENT_POSTINGS_LIMIT = 5
 
 load_dotenv()  # repo-root .env -> ANTHROPIC_API_KEY
 load_dotenv(Path(__file__).parent / ".env.local")  # DATABASE_URL
@@ -77,12 +81,14 @@ _VALUE_COLUMNS = [col for pair in ((col, f"{col}_why") for col in FIELD_TO_COLUM
 _UPDATE_COLUMNS = ["source_id", "error"] + _VALUE_COLUMNS
 
 # ON CONFLICT DO UPDATE so a URL selected for reprocessing (via --overwrite-where) overwrites
-# its existing row in place rather than being silently dropped.
+# its existing row in place rather than being silently dropped. parsed_at is set from now()
+# rather than a bound param so a reprocess always reflects when it actually re-ran.
 UPSERT_PREDOC_SQL = f"""
-    INSERT INTO predoc (source_id, url, error, {", ".join(_VALUE_COLUMNS)})
-    VALUES (%(source_id)s, %(url)s, %(error)s,
+    INSERT INTO predoc (source_id, url, error, parsed_at, {", ".join(_VALUE_COLUMNS)})
+    VALUES (%(source_id)s, %(url)s, %(error)s, now(),
             {", ".join(f"%({col})s" for col in _VALUE_COLUMNS)})
     ON CONFLICT (url) DO UPDATE SET
+        parsed_at = now(),
         {", ".join(f"{col} = EXCLUDED.{col}" for col in _UPDATE_COLUMNS)}
 """
 
@@ -201,22 +207,51 @@ def render_postings_list(postings: list) -> str:
     return "\n".join(f"- **{p['institution']}** — {p['title']}" for p in postings)
 
 
-def update_readme_postings(postings: list) -> None:
+def fetch_recent_postings(cur, limit: int = RECENT_POSTINGS_LIMIT) -> list:
+    cur.execute(
+        """
+        SELECT pos_institution, pos_title, url
+        FROM predoc
+        WHERE error IS NULL
+        ORDER BY parsed_at DESC,
+                 app_opens_earliest ASC NULLS LAST,
+                 app_closes_earliest ASC NULLS LAST,
+                 pos_starts_earliest ASC NULLS LAST
+        LIMIT %s
+        """,
+        (limit,),
+    )
+    return cur.fetchall()
+
+
+def render_recent_postings(rows: list) -> str:
+    if not rows:
+        return "_No postings scraped yet._"
+    return "\n".join(
+        f"- **{institution or 'Unknown institution'}** — [{title or 'Untitled position'}]({url})"
+        for institution, title, url in rows
+    )
+
+
+def _replace_marked_section(text: str, start: str, end: str, content: str) -> str:
+    return re.sub(rf"{re.escape(start)}.*?{re.escape(end)}", f"{start}\n{content}\n{end}", text, flags=re.DOTALL)
+
+
+def update_readme(cur) -> None:
     """
-    Rewrites the README's marked "latest postings" section with this run's newly found
-    postings, so a run that finds new postings also produces a commit -- keeping the repo
-    active enough that GitHub doesn't auto-disable the scheduled workflow after 60 days of
+    Rewrites the README's marked "recent postings" (top RECENT_POSTINGS_LIMIT postings,
+    freshest-parsed first) and "last ran" sections. The latter changes on every run -- new
+    postings or not -- so the pipeline always produces a commit, keeping the repo active
+    enough that GitHub doesn't auto-disable the scheduled workflow after 60 days of
     inactivity (see .github/workflows/ingest.yml).
     """
     readme = README_PATH.read_text(encoding="utf-8")
-    section = f"{README_MARKER_START}\n{render_postings_list(postings)}\n{README_MARKER_END}"
-    updated = re.sub(
-        rf"{re.escape(README_MARKER_START)}.*?{re.escape(README_MARKER_END)}",
-        section,
-        readme,
-        flags=re.DOTALL,
+    readme = _replace_marked_section(
+        readme, RECENT_POSTINGS_START, RECENT_POSTINGS_END, render_recent_postings(fetch_recent_postings(cur))
     )
-    README_PATH.write_text(updated, encoding="utf-8")
+    last_ran = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M UTC")
+    readme = _replace_marked_section(readme, LAST_RAN_START, LAST_RAN_END, f"Last ran: {last_ran}")
+    README_PATH.write_text(readme, encoding="utf-8")
 
 
 def main():
@@ -262,8 +297,7 @@ def main():
         f"Total extraction cost: ${totals['cost']:.4f}"
     )
 
-    if totals["postings"]:
-        update_readme_postings(totals["postings"])
+    update_readme(cur)
 
     # Surface this run's totals as step outputs so the ingest workflow can email a summary
     # when new links were actually found -- a no-op outside GitHub Actions (GITHUB_OUTPUT unset).

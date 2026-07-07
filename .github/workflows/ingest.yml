@@ -103,8 +103,7 @@ jobs:
             New postings:
             ${{ steps.ingest.outputs.postings }}
 
-      - name: Commit updated README if new postings were found
-        if: steps.ingest.outputs.new_links != '0'
+      - name: Commit updated README (recent postings + last-run timestamp)
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
