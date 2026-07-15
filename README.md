@@ -9,15 +9,15 @@ Postgres database, which a read-only API serves to a filterable web frontend.
 ## Recent postings
 
 <!-- RECENT_POSTINGS:START -->
+- **Stanford University** — [Pre-doc in Global Sustainability and Applied Economics](https://bit.ly/4bdAeD5)
+- **University of Notre Dame** — [Research Associate](https://apply.interfolio.com/189490)
+- **Harvard Business School** — [Predoctoral Research Associate - Economics and Accounting](https://careers.harvard.edu/job/predoctoral-research-associate-economics-and-accounting-in-boston-ma-united-states-jid-1270   )
 - **Stanford University** — [Pre-doc in Global Sustainability and Applied Economics](https://econjobmarket.org/positions/12541)
 - **Brown University** — [Research Associate](https://bit.ly/4wpM3xR)
-- **CEMFI** — [Research Pre-Doctoral Fellow](https://bit.ly/44hatxH)
-- **UC Berkeley** — [Predoctoral Research Assistant](https://www.dropbox.com/scl/fi/5tdgie0fmx2b3iwudy2hd/Butera-Lian-Shenhav-Taubinsky-Predoc-Position.pdf?rlkey=ci3j7q5fwn1oj6yas1dkuopye&e=1&st=d5fabubx&dl=0)
-- **Northwestern University** — [Research Data Analyst Associate](https://economics.northwestern.edu/people/research-data-analyst-associate-description-for-external-distribution-2024.pdf)
 <!-- RECENT_POSTINGS:END -->
 
 <!-- LAST_RAN:START -->
-Last ran: 2026-07-14 14:14 UTC
+Last ran: 2026-07-15 14:10 UTC
 <!-- LAST_RAN:END -->
 
 *(Updated automatically by the daily ingestion job — see `.github/workflows/ingest.yml`.)*
