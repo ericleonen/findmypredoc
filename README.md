@@ -9,15 +9,15 @@ Postgres database, which a read-only API serves to a filterable web frontend.
 ## Recent postings
 
 <!-- RECENT_POSTINGS:START -->
+- **University of Chicago** — [Research Professional](https://bit.ly/4wEZ5bt)
+- **Massachusetts Institute of Technology** — [Pre-Doctoral Researcher](https://www.nber.org/sites/default/files/2026-08/2027%20MIT%20RA%20opportunity%20with%20Prof.%20Finkelstein.pdf)
 - **Harvard Business School** — [Research Associate (General)](https://bit.ly/4pUpU9a)
 - **Harvard Business School** — [Research Associate (General)](https://bit.ly/4yz1mX4)
 - **Harvard Business School** — [Manager, Project on Impact Investing](https://careers.harvard.edu/job/manager-project-on-impact-investing-in-boston-ma-united-states-jid-1790)
-- **University of Notre Dame** — [Research Associate](https://bit.ly/44swtG1)
-- **Harvard Business School** — [Predoctoral Research Associate - Economics and Accounting](https://bit.ly/455YEdU)
 <!-- RECENT_POSTINGS:END -->
 
 <!-- LAST_RAN:START -->
-Last ran: 2026-08-04 14:40 UTC
+Last ran: 2026-08-05 14:33 UTC
 <!-- LAST_RAN:END -->
 
 *(Updated automatically by the daily ingestion job — see `.github/workflows/ingest.yml`.)*
