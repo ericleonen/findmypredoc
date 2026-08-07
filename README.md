@@ -17,7 +17,7 @@ Postgres database, which a read-only API serves to a filterable web frontend.
 <!-- RECENT_POSTINGS:END -->
 
 <!-- LAST_RAN:START -->
-Last ran: 2026-08-06 14:35 UTC
+Last ran: 2026-08-07 13:38 UTC
 <!-- LAST_RAN:END -->
 
 *(Updated automatically by the daily ingestion job — see `.github/workflows/ingest.yml`.)*
