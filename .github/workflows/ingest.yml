@@ -100,7 +100,8 @@ jobs:
             Success rate: ${{ steps.ingest.outputs.success_rate }}%
             Estimated extraction cost: $${{ steps.ingest.outputs.cost }}
 
-            New postings:
+            New links (successes named, failures listed with their reason -- every entry
+            carries its URL so a failed posting can still be checked by hand):
             ${{ steps.ingest.outputs.postings }}
 
       - name: Commit updated README (recent postings + last-run timestamp)

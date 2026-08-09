@@ -181,17 +181,24 @@ def process_url(cur, url: str, source_id, totals: dict) -> None:
             fields = extracted_row(extraction)
             totals["extracted"] += 1
             totals["cost"] += extraction_cost(usage)
-            totals["postings"].append(
-                {
-                    "institution": fields["pos_institution"] or "Unknown institution",
-                    "title": fields["pos_title"] or "Untitled position",
-                }
-            )
         except Exception as e:
             error = f"EXTRACT: {type(e).__name__}: {e}"
 
     if error is not None:
         totals["failed"] += 1
+
+    # Every new URL lands in the summary list, successful or not: when reading or extraction
+    # fails there's no institution/title to name the posting by, so the link (plus the failure
+    # reason) is all the summary email can offer -- and it's exactly what's needed to go look
+    # at the posting by hand.
+    totals["postings"].append(
+        {
+            "url": url,
+            "institution": fields["pos_institution"],
+            "title": fields["pos_title"],
+            "error": error,
+        }
+    )
 
     row = {"source_id": source_id, "url": url, "error": error}
     row.update(fields)
@@ -203,8 +210,30 @@ def _set_cost_postfix(progress: tqdm, totals: dict) -> None:
         progress.set_postfix(avg_cost=f"${totals['cost'] / totals['extracted']:.4f}")
 
 
+ERROR_SUMMARY_MAX_CHARS = 200
+
+
+def _one_line(error: str) -> str:
+    """Collapses an exception message to a single truncated line so it can't wreck the list."""
+    collapsed = " ".join(error.split())
+    if len(collapsed) > ERROR_SUMMARY_MAX_CHARS:
+        collapsed = collapsed[: ERROR_SUMMARY_MAX_CHARS - 1].rstrip() + "…"
+    return collapsed
+
+
 def render_postings_list(postings: list) -> str:
-    return "\n".join(f"- **{p['institution']}** — {p['title']}" for p in postings)
+    """
+    Renders this run's new links for the summary email: two lines per posting, the second of
+    which is always the URL, so a posting that failed to read/extract is still actionable.
+    """
+    entries = []
+    for p in postings:
+        if p["error"] is not None:
+            headline = f"**Failed** — {_one_line(p['error'])}"
+        else:
+            headline = f"**{p['institution'] or 'Unknown institution'}** — {p['title'] or 'Untitled position'}"
+        entries.append(f"- {headline}\n  {p['url']}")
+    return "\n".join(entries)
 
 
 def fetch_recent_postings(cur, limit: int = RECENT_POSTINGS_LIMIT) -> list:
