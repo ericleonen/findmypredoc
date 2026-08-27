@@ -9,15 +9,15 @@ Postgres database, which a read-only API serves to a filterable web frontend.
 ## Recent postings
 
 <!-- RECENT_POSTINGS:START -->
-- **Harvard University** — [Pre-Doctoral Fellowship (Profs. Laibson/Choi/Beshears)](https://bit.ly/4zFggLT)
-- **CEMFI** — [Research Pre-Doctoral Fellow](https://econjobmarket.org/positions/12597)
-- **Harvard University** — [Pre-Doctoral Fellowship (Profs. Laibson/Choi/Beshears)](https://academicpositions.harvard.edu/postings/16704)
-- **Federal Reserve Bank of St. Louis** — [Research Associate](https://econjobmarket.org/positions/12583)
-- **University of Chicago** — [Research Professional - Health Economics Initiative](https://bit.ly/45CKBwU)
+- **Federal Reserve Bank of New York** — [Research Analyst](https://bit.ly/4y6hHBr)
+- **Dartmouth College** — [Economics Research Specialist](https://bit.ly/4hUxzSR)
+- **University of Pennsylvania** — [Pre-Doctoral Research Specialist (Real Estate Center)](https://urldefense.com/v3/__https://wd1.myworkdaysite.com/recruiting/upenn/Wharton/job/Dinan-Hall---4th-Floor/Pre-Doctoral-Research-Specialist--Real-Estate-Center-_JR00124462__;!!IBzWLUs!VM4yYzh0aGnUVmMRA_zEMu9fd3_arztGVW53NT7Ou5K7liz3IoVVbJiCd0TsKwQDkYbg_BUl6E6Q2kAYWV_7_LJaH-gbn7Q$)
+- **The University of Chicago Booth School of Business** — [Research Assistant](https://www.chicagobooth.edu/-/media/faculty/research-professional-program/job-ads/2026-27/budish-rp-ad.pdf)
+- **Dartmouth College** — [Economics Research Specialist](https://apply.interfolio.com/192176)
 <!-- RECENT_POSTINGS:END -->
 
 <!-- LAST_RAN:START -->
-Last ran: 2026-08-26 13:17 UTC
+Last ran: 2026-08-27 22:18 UTC
 <!-- LAST_RAN:END -->
 
 *(Updated automatically by the daily ingestion job — see `.github/workflows/ingest.yml`.)*
