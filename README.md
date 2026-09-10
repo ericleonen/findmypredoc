@@ -9,15 +9,15 @@ Postgres database, which a read-only API serves to a filterable web frontend.
 ## Recent postings
 
 <!-- RECENT_POSTINGS:START -->
+- **University of California, Berkeley** — [Junior Specialist or Assistant Specialist](https://bit.ly/3UGFIkg)
 - **University of Notre Dame** — [Predoctoral Research Fellow](https://bit.ly/4xNIp26)
 - **University of Notre Dame** — [Predoctoral Research Fellow](https://apply.interfolio.com/192682)
 - **Opportunity Insights** — [Predoctoral Fellow](https://econjobmarket.org/positions/12620)
 - **Federal Reserve Bank of New York** — [Research Analyst](https://bit.ly/4y6hHBr)
-- **Dartmouth College** — [Economics Research Specialist](https://bit.ly/4hUxzSR)
 <!-- RECENT_POSTINGS:END -->
 
 <!-- LAST_RAN:START -->
-Last ran: 2026-09-09 16:39 UTC
+Last ran: 2026-09-10 16:24 UTC
 <!-- LAST_RAN:END -->
 
 *(Updated automatically by the daily ingestion job — see `.github/workflows/ingest.yml`.)*
