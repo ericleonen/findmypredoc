@@ -9,15 +9,15 @@ Postgres database, which a read-only API serves to a filterable web frontend.
 ## Recent postings
 
 <!-- RECENT_POSTINGS:START -->
+- **University of Pennsylvania** — [Pre-Doctoral Research Specialist (Real Estate Center)](https://bit.ly/4rti5I7)
+- **University of Chicago Booth School of Business** — [Research Professional](https://bit.ly/4h1vW51)
+- **Board of Governors of the Federal Reserve System** — [Research Assistant](https://bit.ly/3V0FWCX)
+- **University of Chicago Booth School of Business** — [Predoctoral Research Professional](https://bit.ly/4hmfAmu)
 - **University of Pennsylvania** — [Predoctoral Research Specialist, Rodney White Center for Financial Research, Wharton School](https://bit.ly/4yJQJzJ)
-- **University of Pennsylvania** — [Predoctoral Research Specialist](https://wd1.myworkdaysite.com/recruiting/upenn/careers-at-penn/job/SteinbergDietrich-Hall---3rd-Floor/Predoctoral-Research-Specialist--Rodney-White-Center-for-Financial-Research--Wharton-School_JR00127855-1)
-- **University of Pennsylvania** — [Predoctoral Research Specialist, Rodney White Center for Financial Research, Wharton School](https://bit.ly/4dFtX3X)
-- **Brown University** — [Pre-Doctoral Research Associate](https://apply.interfolio.com/191110)
-- **University of Chicago Booth School of Business** — [Predoctoral Research Professional](https://www.chicagobooth.edu/research/fama-miller/research-professional-program/rp-position)
 <!-- RECENT_POSTINGS:END -->
 
 <!-- LAST_RAN:START -->
-Last ran: 2026-09-18 16:25 UTC
+Last ran: 2026-09-19 15:53 UTC
 <!-- LAST_RAN:END -->
 
 *(Updated automatically by the daily ingestion job — see `.github/workflows/ingest.yml`.)*
