@@ -9,15 +9,15 @@ Postgres database, which a read-only API serves to a filterable web frontend.
 ## Recent postings
 
 <!-- RECENT_POSTINGS:START -->
+- **Columbia University** — [Research Staff Associate](https://bit.ly/3TgF5O0)
+- **Columbia University** — [Staff Associate I](https://bit.ly/3VseHRO)
+- **Harvard Kennedy School, Center for International Development** — [CID Research Fellow – Prof. Rema Hanna](https://www.hks.harvard.edu/centers/cid/about-cid/jobs-opportunities#cid-research-fellow---prof--rema-hanna-1876028)
+- **Columbia University** — [Research Staff Associate](https://apply.interfolio.com/193960)
 - **University of British Columbia** — [Research Assistant (Pre-Doc Intern)](https://bit.ly/3VuuwHD)
-- **University of Chicago Booth School of Business** — [Research Professional](https://bit.ly/3V5WhWY)
-- **Brown University** — [Pre-Doctoral Research Associate](https://bit.ly/46BM5rH)
-- **University of Pennsylvania** — [Pre-Doctoral Research Specialist (Real Estate Center)](https://bit.ly/4rti5I7)
-- **University of Chicago Booth School of Business** — [Research Professional](https://bit.ly/4h1vW51)
 <!-- RECENT_POSTINGS:END -->
 
 <!-- LAST_RAN:START -->
-Last ran: 2026-09-23 16:58 UTC
+Last ran: 2026-09-24 17:11 UTC
 <!-- LAST_RAN:END -->
 
 *(Updated automatically by the daily ingestion job — see `.github/workflows/ingest.yml`.)*
