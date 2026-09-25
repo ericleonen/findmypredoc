@@ -9,15 +9,15 @@ Postgres database, which a read-only API serves to a filterable web frontend.
 ## Recent postings
 
 <!-- RECENT_POSTINGS:START -->
-- **Columbia University** — [Research Staff Associate](https://bit.ly/3TgF5O0)
-- **Columbia University** — [Staff Associate I](https://bit.ly/3VseHRO)
-- **Harvard Kennedy School, Center for International Development** — [CID Research Fellow – Prof. Rema Hanna](https://www.hks.harvard.edu/centers/cid/about-cid/jobs-opportunities#cid-research-fellow---prof--rema-hanna-1876028)
-- **Columbia University** — [Research Staff Associate](https://apply.interfolio.com/193960)
-- **University of British Columbia** — [Research Assistant (Pre-Doc Intern)](https://bit.ly/3VuuwHD)
+- **Massachusetts Institute of Technology, Sloan School of Management** — [Pre-doctoral Researcher - Technical Associate](https://bit.ly/4yfkFny)
+- **Massachusetts Institute of Technology, Sloan School of Management** — [Pre-Doctoral Researcher - Technical Associate (Prof. Wolfram and Demirer)](https://bit.ly/4dVark2)
+- **Massachusetts Institute of Technology, Sloan School of Management** — [Pre-Doctoral Researcher - Technical Associate](https://bit.ly/4d5k3Zk)
+- **Harvard Kennedy School, Center for International Development** — [CID Research Fellow – Prof. Rema Hanna](https://bit.ly/4iNztVS)
+- **Columbia University** — [Staff Associate - Finance](https://bit.ly/3TiV7Ha)
 <!-- RECENT_POSTINGS:END -->
 
 <!-- LAST_RAN:START -->
-Last ran: 2026-09-24 17:11 UTC
+Last ran: 2026-09-25 17:13 UTC
 <!-- LAST_RAN:END -->
 
 *(Updated automatically by the daily ingestion job — see `.github/workflows/ingest.yml`.)*
