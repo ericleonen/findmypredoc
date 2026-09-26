@@ -9,15 +9,15 @@ Postgres database, which a read-only API serves to a filterable web frontend.
 ## Recent postings
 
 <!-- RECENT_POSTINGS:START -->
-- **Massachusetts Institute of Technology, Sloan School of Management** — [Pre-doctoral Researcher - Technical Associate](https://bit.ly/4yfkFny)
-- **Massachusetts Institute of Technology, Sloan School of Management** — [Pre-Doctoral Researcher - Technical Associate (Prof. Wolfram and Demirer)](https://bit.ly/4dVark2)
-- **Massachusetts Institute of Technology, Sloan School of Management** — [Pre-Doctoral Researcher - Technical Associate](https://bit.ly/4d5k3Zk)
-- **Harvard Kennedy School, Center for International Development** — [CID Research Fellow – Prof. Rema Hanna](https://bit.ly/4iNztVS)
-- **Columbia University** — [Staff Associate - Finance](https://bit.ly/3TiV7Ha)
+- **University of Notre Dame** — [Predoctoral Research Scholar](https://bit.ly/4rz4sqU)
+- **University of Notre Dame** — [Predoctoral Research Scholar](https://bit.ly/4ylZ510)
+- **University of Notre Dame** — [Predoctoral Research Scholar](https://bit.ly/4d6kYJ2)
+- **University of Notre Dame** — [Predoctoral Research Scholar](https://bit.ly/4hevCzP)
+- **Harvard University** — [Pre-Doctoral Fellowship in Behavioral-Economic Theory](https://bit.ly/3VcFTUE)
 <!-- RECENT_POSTINGS:END -->
 
 <!-- LAST_RAN:START -->
-Last ran: 2026-09-25 17:13 UTC
+Last ran: 2026-09-26 16:24 UTC
 <!-- LAST_RAN:END -->
 
 *(Updated automatically by the daily ingestion job — see `.github/workflows/ingest.yml`.)*
