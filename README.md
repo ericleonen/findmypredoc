@@ -9,15 +9,15 @@ Postgres database, which a read-only API serves to a filterable web frontend.
 ## Recent postings
 
 <!-- RECENT_POSTINGS:START -->
+- **Stanford Institute for Economic Policy Research (SIEPR)** — [SIEPR Predoctoral Research Fellow](https://siepr.stanford.edu/programs/siepr-predoctoral-research-fellows-program/apply-siepr-predoctoral-research-fellows)
 - **Federal Trade Commission** — [Statistician](https://bit.ly/4iNYQ9Z)
 - **University of Notre Dame** — [Predoctoral Research Scholar](https://bit.ly/4rz4sqU)
 - **University of Notre Dame** — [Predoctoral Research Scholar](https://bit.ly/4ylZ510)
 - **University of Notre Dame** — [Predoctoral Research Scholar](https://bit.ly/4d6kYJ2)
-- **University of Notre Dame** — [Predoctoral Research Scholar](https://bit.ly/4hevCzP)
 <!-- RECENT_POSTINGS:END -->
 
 <!-- LAST_RAN:START -->
-Last ran: 2026-09-28 19:41 UTC
+Last ran: 2026-09-29 18:05 UTC
 <!-- LAST_RAN:END -->
 
 *(Updated automatically by the daily ingestion job — see `.github/workflows/ingest.yml`.)*
