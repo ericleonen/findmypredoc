@@ -9,15 +9,15 @@ Postgres database, which a read-only API serves to a filterable web frontend.
 ## Recent postings
 
 <!-- RECENT_POSTINGS:START -->
-- **Massachusetts Institute of Technology: Sloan School of Management** — [Pre-doctoral Researcher - Technical Associate](https://apply.interfolio.com/194610)
-- **Northwestern University** — [Empirical Research Fellow](https://facultyrecruiting.northwestern.edu/apply/MjY2MA==)
-- **Massachusetts Institute of Technology** — [Pre-doctoral Researcher - Technical Associate](https://bit.ly/4AGEW74)
-- **Harvard University** — [Predoctoral Research Associate](https://bit.ly/3Vn96MG)
-- **Stanford Institute for Economic Policy Research (SIEPR)** — [SIEPR Predoctoral Research Fellow](https://bit.ly/4xVMGQh)
+- **Dartmouth College** — [Predoctoral Research Assistant](https://bit.ly/4hxusOH)
+- **Northwestern University** — [Empirical Research Fellow](https://bit.ly/46VfZrc)
+- **Northwestern University** — [Empirical Research Fellow](https://bit.ly/4xVvdqY)
+- **New York University, Leonard N. Stern School of Business** — [Junior Research Scientist](https://bit.ly/47v7e7d)
+- **Dartmouth College** — [Economics Research Specialist in International Trade](https://bit.ly/3W33A1T)
 <!-- RECENT_POSTINGS:END -->
 
 <!-- LAST_RAN:START -->
-Last ran: 2026-10-01 18:26 UTC
+Last ran: 2026-10-02 17:54 UTC
 <!-- LAST_RAN:END -->
 
 *(Updated automatically by the daily ingestion job — see `.github/workflows/ingest.yml`.)*
