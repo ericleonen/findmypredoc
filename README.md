@@ -9,15 +9,15 @@ Postgres database, which a read-only API serves to a filterable web frontend.
 ## Recent postings
 
 <!-- RECENT_POSTINGS:START -->
+- **University of Chicago Booth School of Business** — [Research Professional](https://bit.ly/4yRfRoK)
+- **University of Chicago** — [Full Time Research Assistant](https://workforcenow.adp.com/mascsr/default/mdf/recruitment/recruitment.html?cid=62bc21f7-1c83-4bca-8f15-c70a9edae2c5&ccId=19000101_000001&jobId=959541&source=CC2&lang=en_US)
 - **Columbia University** — [Research Staff Associate](https://apply.interfolio.com/195145)
 - **University of Chicago Booth School of Business** — [Research Professional](https://uchicago.wd5.myworkdayjobs.com/External/job/Chicago-IL/Research-Professional_JR34816)
 - **Federal Reserve Bank of Chicago** — [Research Assistant](https://bit.ly/4zxzQIX)
-- **Yale University** — [Pre-Doctoral Fellow](https://bit.ly/4yAJGJz)
-- **University of California, Berkeley** — [Junior Specialist / Assistant Specialist](https://bit.ly/4hZYTxj)
 <!-- RECENT_POSTINGS:END -->
 
 <!-- LAST_RAN:START -->
-Last ran: 2026-10-15 17:00 UTC
+Last ran: 2026-10-16 16:39 UTC
 <!-- LAST_RAN:END -->
 
 *(Updated automatically by the daily ingestion job — see `.github/workflows/ingest.yml`.)*
