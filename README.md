@@ -9,15 +9,15 @@ Postgres database, which a read-only API serves to a filterable web frontend.
 ## Recent postings
 
 <!-- RECENT_POSTINGS:START -->
+- **University of California, Berkeley** — [Junior Specialist or Assistant Specialist](https://aprecruit.berkeley.edu/JPF05554)
+- **Yale University** — [Predoctoral Fellow](https://tobin.yale.edu/opportunities/research-health-care-us-1)
+- **Yale University** — [Predoctoral Fellow](https://tobin.yale.edu/opportunities/economics-safety-net-0)
+- **Yale University** — [Predoctoral Research Assistant](https://tobin.yale.edu/opportunities/supporting-research-economics-children-and-families)
 - **National Bureau of Economic Research** — [Full Time Research Assistant](https://bit.ly/4ypqwpM)
-- **University of Chicago Booth School of Business** — [Research Professional](https://www.chicagobooth.edu/-/media/faculty/research-professional-program/job-ads/2026-27/leuz-stewart-ad-2026.pdf)
-- **University of Chicago Booth School of Business** — [Research Professional](https://bit.ly/4yRfRoK)
-- **University of Chicago** — [Full Time Research Assistant](https://workforcenow.adp.com/mascsr/default/mdf/recruitment/recruitment.html?cid=62bc21f7-1c83-4bca-8f15-c70a9edae2c5&ccId=19000101_000001&jobId=959541&source=CC2&lang=en_US)
-- **Columbia University** — [Research Staff Associate](https://apply.interfolio.com/195145)
 <!-- RECENT_POSTINGS:END -->
 
 <!-- LAST_RAN:START -->
-Last ran: 2026-10-18 15:52 UTC
+Last ran: 2026-10-19 18:43 UTC
 <!-- LAST_RAN:END -->
 
 *(Updated automatically by the daily ingestion job — see `.github/workflows/ingest.yml`.)*
