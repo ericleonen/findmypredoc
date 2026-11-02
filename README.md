@@ -9,15 +9,15 @@ Postgres database, which a read-only API serves to a filterable web frontend.
 ## Recent postings
 
 <!-- RECENT_POSTINGS:START -->
+- **Rutgers University** — [Research Coordinator - READ Lab](https://bit.ly/4ikQLJj)
+- **HKU Business School, University of Hong Kong** — [Pre-doctoral Program](https://bit.ly/4z0a67n)
+- **Texas A&M University** — [Predoctoral Research Assistant](https://bit.ly/4eeDJuo)
+- **Lake Lucerne Institute** — [Predoctoral Fellow](https://www.nber.org/sites/default/files/2026-11/LLUI-Wealth-Predoc-2027.pdf)
 - **California Institute of Technology** — [Research Technician-Assistant](https://bit.ly/47JcKU6)
-- **foundry10** — [Economics Research Assistant](https://econjobmarket.org/positions/12952)
-- **University of Pennsylvania** — [Pre-Doctoral Research Specialist (Real Estate Center)](https://wd1.myworkdaysite.com/recruiting/upenn/Wharton/job/Dinan-Hall---4th-Floor/Pre-Doctoral-Research-Specialist--Real-Estate-Center-_JR00124462)
-- **Dartmouth College** — [Economic Research Specialist in Behavioral Economics and Finance](https://apply.interfolio.com/196307)
-- **Georgetown University** — [Economics Pre-Doctoral Fellowship](https://www.nber.org/sites/default/files/2026-10/Ji%20PreDoc%20Ad%202026.pdf)
 <!-- RECENT_POSTINGS:END -->
 
 <!-- LAST_RAN:START -->
-Last ran: 2026-11-01 17:56 UTC
+Last ran: 2026-11-02 21:44 UTC
 <!-- LAST_RAN:END -->
 
 *(Updated automatically by the daily ingestion job — see `.github/workflows/ingest.yml`.)*
