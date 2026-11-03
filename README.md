@@ -9,15 +9,15 @@ Postgres database, which a read-only API serves to a filterable web frontend.
 ## Recent postings
 
 <!-- RECENT_POSTINGS:START -->
+- **ESMT Berlin** — [Predoctoral Researcher](https://jobs.esmt.berlin/en?id=63a5b3)
 - **Rutgers University** — [Research Coordinator - READ Lab](https://bit.ly/4ikQLJj)
 - **HKU Business School, University of Hong Kong** — [Pre-doctoral Program](https://bit.ly/4z0a67n)
 - **Texas A&M University** — [Predoctoral Research Assistant](https://bit.ly/4eeDJuo)
 - **Lake Lucerne Institute** — [Predoctoral Fellow](https://www.nber.org/sites/default/files/2026-11/LLUI-Wealth-Predoc-2027.pdf)
-- **California Institute of Technology** — [Research Technician-Assistant](https://bit.ly/47JcKU6)
 <!-- RECENT_POSTINGS:END -->
 
 <!-- LAST_RAN:START -->
-Last ran: 2026-11-02 21:44 UTC
+Last ran: 2026-11-03 19:29 UTC
 <!-- LAST_RAN:END -->
 
 *(Updated automatically by the daily ingestion job — see `.github/workflows/ingest.yml`.)*
